@@ -1,0 +1,14 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/elbo-ai-inc-puppetry-openapi-original.json
+summary:
+  types:
+  - http
+schemes:
+- name: developerApiKey
+  type: http
+  scheme: bearer
+  bearerFormat: Puppetry API key
+  description: 'Use the Authorization header with a live Puppetry API key: Bearer [example key]'
+  sources:
+  - openapi/elbo-ai-inc-puppetry-openapi-original.json

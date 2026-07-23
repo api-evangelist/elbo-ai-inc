@@ -1,0 +1,694 @@
+openapi: 3.1.0
+info:
+  title: Puppetry Developer API Beta Audio Uploads Usage API
+  description: Live Puppetry Developer API beta for Puppetry Voice API access, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.
+  version: '2026-05-11'
+  contact:
+    name: Puppetry Support
+    url: https://www.puppetry.com
+    email: support@puppetry.com
+  termsOfService: https://www.puppetry.com/tos
+  license:
+    name: Proprietary
+servers:
+- url: https://www.puppetry.com
+  description: Production
+security:
+- developerApiKey: []
+tags:
+- name: Usage
+paths:
+  /api/v1/usage:
+    get:
+      operationId: getDeveloperApiUsage
+      x-openai-isConsequential: false
+      summary: Get Developer API usage
+      description: Returns the authenticated workspace's current video credit balance plus monthly credit usage for credit-backed Developer API video jobs. Requires the videos:read scope. When video generation is blocked by active job slots or usage data is temporarily unavailable, the response includes Retry-After and X-Puppetry-Next-Poll-At so agents can pace the next create or usage attempt.
+      tags:
+      - Usage
+      security:
+      - developerApiKey: []
+      responses:
+        '200':
+          description: Current Developer API usage
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/RateLimitLimit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/RateLimitRemaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/RateLimitReset'
+            Retry-After:
+              $ref: '#/components/headers/RetryAfter'
+            X-Puppetry-Next-Poll-At:
+              $ref: '#/components/headers/NextPollAt'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/TemporarilyUnavailable'
+components:
+  responses:
+    Forbidden:
+      description: The API key does not include the required endpoint scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            forbidden:
+              value:
+                error: forbidden
+                message: This API key does not have the required scope
+    RateLimited:
+      description: Rate limit or monthly beta quota exceeded
+      headers:
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            rateLimited:
+              value:
+                error: rate_limited
+                message: 'Developer API beta limit exceeded: 10 requests per minute.'
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+            voiceCharacterLimit:
+              value:
+                error: voice_character_limit_exceeded
+                message: Monthly Puppetry Voice character limit exceeded
+                details:
+                  retryable: true
+                  retry_after_seconds: 86400
+                  retryAfter: 86400
+                  retryAfterSeconds: 86400
+            concurrentVideoJobLimit:
+              value:
+                error: concurrent_job_limit_exceeded
+                message: Developer API concurrent job limit exceeded
+                details:
+                  retryable: true
+                  concurrent_jobs: 2
+                  concurrentJobs: 2
+                  active_jobs: 2
+                  activeJobs: 2
+                  available_slots: 0
+                  availableSlots: 0
+                  active_job_expires_in_seconds: 512
+                  activeJobExpiresInSeconds: 512
+                  retry_after_seconds: 512
+                  retryAfter: 512
+                  retryAfterSeconds: 512
+    Unauthorized:
+      description: Missing, malformed, invalid, or revoked API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unauthorized:
+              value:
+                error: unauthorized
+                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
+    TemporarilyUnavailable:
+      description: A beta quota, usage lookup, or job counter is temporarily unavailable.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+        X-Puppetry-Next-Poll-At:
+          $ref: '#/components/headers/NextPollAt'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            apiAuthUnavailable:
+              value:
+                error: api_auth_unavailable
+                message: Developer API authentication is temporarily unavailable
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+  headers:
+    NextPollAt:
+      description: Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.
+      schema:
+        type: string
+        format: date-time
+        example: '2026-06-22T08:50:30.000Z'
+    RetryAfter:
+      description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
+      schema:
+        type: integer
+        example: 30
+    RateLimitRemaining:
+      description: Requests remaining in the current one-minute window.
+      schema:
+        type: integer
+        example: 9
+    RateLimitReset:
+      description: Unix timestamp, in seconds, when the current rate-limit window resets.
+      schema:
+        type: integer
+        example: 1778520000
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+        example: 10
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          examples:
+          - invalid_request
+          - unauthorized
+          - rate_limited
+        message:
+          type: string
+        object:
+          type: string
+          const: video_job
+          description: Present on retryable transient video-status errors when the affected API video job is known.
+        id:
+          type: string
+          description: Present on retryable transient video-status errors. API video job ID to keep polling.
+        credits:
+          type: object
+          description: Present on retryable transient video-status errors for accepted API video jobs. Status polls are never billed, so charged is 0.
+          properties:
+            charged:
+              type: integer
+              minimum: 0
+              example: 0
+            remaining:
+              type:
+              - integer
+              - 'null'
+              minimum: 0
+              description: Current balance if available; null when the status poll did not fetch credit state.
+          additionalProperties: false
+        creation_credits:
+          $ref: '#/components/schemas/VideoJobCreationCredits'
+          description: Original create-time video credit debit evidence for the affected API video job when available.
+        creationCredits:
+          $ref: '#/components/schemas/VideoJobCreationCredits'
+          description: SDK-style alias for creation_credits.
+        retryable:
+          type: boolean
+          description: Present on retryable transient errors and non-retryable terminal video-create/status errors so generated clients can identify retry/backoff behavior without parsing details.
+        retry_blocked_reason:
+          type: string
+          description: Present on non-retryable terminal video-create/status errors. Redacted reason explaining why clients should not retry the same request.
+        retryBlockedReason:
+          type: string
+          description: SDK-style alias for retry_blocked_reason.
+        retry_block_code:
+          type: string
+          description: Present on non-retryable terminal video-create/status errors. Stable retry-block code suitable for generated clients.
+        retryBlockCode:
+          type: string
+          description: SDK-style alias for retry_block_code.
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+          description: Present on retryable transient errors. Mirrors Retry-After and details.retry_after_seconds.
+        retryAfter:
+          type: integer
+          minimum: 0
+          description: SDK-style alias for retry_after_seconds.
+        retryAfterSeconds:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for retry_after_seconds.
+        next_poll_at:
+          type: string
+          format: date-time
+          description: Present on retryable transient errors. Absolute UTC time when clients should retry the request or poll again.
+        nextPollAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for next_poll_at.
+        job_id:
+          type: string
+          description: Present on retryable transient video-status errors so clients can correlate the retry to the API video job.
+        jobId:
+          type: string
+          description: SDK-style alias for job_id.
+        task_id:
+          type: string
+          description: Task-style alias for job_id on retryable transient video-status errors.
+        taskId:
+          type: string
+          description: CamelCase task-style alias for job_id.
+        source:
+          type: string
+          enum:
+          - text
+          - audio
+          description: Video creation source for the affected API video job.
+        request_source:
+          type: string
+          enum:
+          - text
+          - audio
+          description: Alias for source.
+        requestSource:
+          type: string
+          enum:
+          - text
+          - audio
+          description: SDK-style alias for source.
+        status_url:
+          type: string
+          description: Present on retryable transient video-status errors so clients know which job resource to poll next.
+        statusUrl:
+          type: string
+          description: SDK-style alias for status_url.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time for the affected API video job.
+        createdAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for created_at.
+        expires_at:
+          type: string
+          format: date-time
+          description: When the affected API video job record expires from status lookup.
+        expiresAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for expires_at.
+        details:
+          description: Endpoint-specific diagnostic fields.
+          type: object
+          additionalProperties: true
+        content_location:
+          type: string
+          description: Body alias for the status poll URL, mirroring the Content-Location response header target for clients that cannot reliably read headers.
+        contentLocation:
+          type: string
+          description: SDK-style alias for content_location.
+      additionalProperties: true
+    VideoJobCreationCredits:
+      type: object
+      required:
+      - charged
+      - remaining_after_debit
+      properties:
+        charged:
+          type: integer
+          minimum: 0
+          example: 1
+          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
+        remaining_after_debit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
+        remainingAfterDebit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: SDK-style alias for remaining_after_debit.
+      additionalProperties: false
+    UsageVideoCredits:
+      type: object
+      required:
+      - balance
+      - month
+      - reset_at
+      - used
+      - refunded
+      - net_used
+      - transactions
+      - current_api_key
+      properties:
+        balance:
+          type: integer
+          description: Current video credit balance for the authenticated account.
+        month:
+          type: string
+          pattern: ^\d{4}-\d{2}$
+          description: UTC usage month represented by the counters.
+        reset_at:
+          type: string
+          format: date-time
+          description: UTC time when the monthly usage window resets.
+        resetAt:
+          type: string
+          format: date-time
+          description: CamelCase alias for reset_at.
+        used:
+          type: integer
+          minimum: 0
+          description: Video credits charged to the authenticated workspace during the current UTC month.
+        refunded:
+          type: integer
+          minimum: 0
+          description: Video credits refunded to the authenticated workspace during the current UTC month.
+        net_used:
+          type: integer
+          description: Monthly used credits minus refunded credits for the authenticated workspace.
+        netUsed:
+          type: integer
+          description: CamelCase alias for net_used.
+        transactions:
+          type: integer
+          minimum: 0
+          description: Credit usage/refund transactions counted for the authenticated workspace during the current UTC month.
+        current_api_key:
+          $ref: '#/components/schemas/UsageApiKeyVideoCredits'
+        currentApiKey:
+          $ref: '#/components/schemas/UsageApiKeyVideoCredits'
+      additionalProperties: false
+    UsageVideoGenerationReadiness:
+      type: object
+      required:
+      - can_create
+      - required_credits
+      - credits_remaining
+      - reason
+      properties:
+        can_create:
+          type: boolean
+          description: True when the authenticated account has enough video credits to submit one Developer API video job.
+        canCreate:
+          type: boolean
+          description: CamelCase alias for can_create.
+        required_credits:
+          type: integer
+          minimum: 1
+          description: Video credits required to submit one Developer API video job.
+        requiredCredits:
+          type: integer
+          minimum: 1
+          description: CamelCase alias for required_credits.
+        credits_remaining:
+          type: integer
+          minimum: 0
+          description: Current video credit balance used for the readiness check.
+        creditsRemaining:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for credits_remaining.
+        concurrent_jobs:
+          type: integer
+          minimum: 1
+          description: Current concurrent Developer API video job limit for this account.
+        concurrentJobs:
+          type: integer
+          minimum: 1
+          description: CamelCase alias for concurrent_jobs.
+        active_jobs:
+          type: integer
+          minimum: 0
+          description: Currently reserved Developer API video jobs for this account.
+        activeJobs:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for active_jobs.
+        available_slots:
+          type: integer
+          minimum: 0
+          description: Concurrent API video job slots available before create calls will return 429.
+        availableSlots:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for available_slots.
+        active_job_expires_in_seconds:
+          type: integer
+          minimum: 0
+          description: Best-effort TTL for the active-job counter when there are reserved slots.
+        activeJobExpiresInSeconds:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for active_job_expires_in_seconds.
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+          description: Best-effort wait before retrying a video create request when reason is concurrent_job_limit_reached.
+        retryAfter:
+          type: integer
+          minimum: 0
+          description: SDK-style alias for retry_after_seconds.
+        retryAfterSeconds:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for retry_after_seconds used by generated clients.
+        next_poll_at:
+          type: string
+          format: date-time
+          description: Absolute UTC time when clients should retry a video create request when reason is concurrent_job_limit_reached.
+        nextPollAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for next_poll_at.
+        reason:
+          type: string
+          enum:
+          - available
+          - insufficient_video_credits
+          - concurrent_job_limit_reached
+          description: Machine-readable reason for the current video-generation readiness state.
+        blockers:
+          type: array
+          description: Present when can_create is false. Lists every actionable blocker, so clients can distinguish credit purchase from active-slot backoff.
+          items:
+            $ref: '#/components/schemas/UsageVideoGenerationBlocker'
+      additionalProperties: false
+    UsageResponse:
+      type: object
+      required:
+      - object
+      - video_credits
+      properties:
+        object:
+          type: string
+          const: usage
+        video_credits:
+          $ref: '#/components/schemas/UsageVideoCredits'
+        videoCredits:
+          $ref: '#/components/schemas/UsageVideoCredits'
+          description: CamelCase alias for video_credits.
+        video_generation:
+          $ref: '#/components/schemas/UsageVideoGenerationReadiness'
+        videoGeneration:
+          $ref: '#/components/schemas/UsageVideoGenerationReadiness'
+          description: CamelCase alias for video_generation.
+        creditsTotal:
+          type: integer
+          minimum: 0
+          description: Legacy flat total for simple SDK and agent displays.
+        creditsUsed:
+          type: integer
+          description: Legacy flat monthly net-used total.
+        creditsRemaining:
+          type: integer
+          minimum: 0
+          description: Legacy flat current video credit balance.
+        periodStart:
+          type: string
+          pattern: ^\d{4}-\d{2}-01$
+          description: Legacy flat UTC month start date.
+        periodEnd:
+          type: string
+          format: date-time
+          description: Legacy flat UTC month reset time.
+      additionalProperties: false
+    UsageApiKeyVideoCredits:
+      type: object
+      required:
+      - used
+      - refunded
+      - net_used
+      - transactions
+      properties:
+        id:
+          type: string
+          description: Opaque API key ID for the authenticated key.
+        key_id:
+          type: string
+          description: Snake-case alias for id.
+        keyId:
+          type: string
+          description: CamelCase alias for key_id.
+        name:
+          type: string
+          description: User-visible API key name, if available.
+        key_prefix:
+          type: string
+          description: Stored display prefix for the API key. This is not the secret key.
+        keyPrefix:
+          type: string
+          description: CamelCase alias for key_prefix.
+        type:
+          type: string
+          enum:
+          - developer_api
+          - mcp
+          description: Key family used for the current request.
+        used:
+          type: integer
+          minimum: 0
+          description: Video credits charged to this API key during the current UTC month.
+        refunded:
+          type: integer
+          minimum: 0
+          description: Video credits refunded to this API key during the current UTC month.
+        net_used:
+          type: integer
+          description: Monthly used credits minus refunded credits for this API key.
+        netUsed:
+          type: integer
+          description: CamelCase alias for net_used.
+        transactions:
+          type: integer
+          minimum: 0
+          description: Credit usage/refund transactions counted for this API key during the current UTC month.
+      additionalProperties: false
+    UsageVideoGenerationBlocker:
+      type: object
+      required:
+      - code
+      - reason
+      - retryable
+      properties:
+        code:
+          type: string
+          enum:
+          - insufficient_video_credits
+          - concurrent_job_limit_reached
+          description: Stable machine-readable blocker code for one reason video creation is unavailable.
+        reason:
+          type: string
+          enum:
+          - insufficient_video_credits
+          - concurrent_job_limit_reached
+          description: Alias for code, kept for simple generated clients.
+        retryable:
+          type: boolean
+          description: Whether retrying later can clear this blocker without buying credits or changing the request.
+        required_credits:
+          type: integer
+          minimum: 1
+        requiredCredits:
+          type: integer
+          minimum: 1
+          description: CamelCase alias for required_credits.
+        credits_remaining:
+          type: integer
+          minimum: 0
+        creditsRemaining:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for credits_remaining.
+        retry_block_code:
+          type: string
+          maxLength: 120
+          description: Stable retry-block code for non-retryable blockers.
+        retryBlockCode:
+          type: string
+          maxLength: 120
+          description: CamelCase alias for retry_block_code.
+        concurrent_jobs:
+          type: integer
+          minimum: 1
+        concurrentJobs:
+          type: integer
+          minimum: 1
+          description: CamelCase alias for concurrent_jobs.
+        active_jobs:
+          type: integer
+          minimum: 0
+        activeJobs:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for active_jobs.
+        available_slots:
+          type: integer
+          minimum: 0
+        availableSlots:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for available_slots.
+        active_job_expires_in_seconds:
+          type: integer
+          minimum: 0
+        activeJobExpiresInSeconds:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for active_job_expires_in_seconds.
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+          description: Best-effort wait before retrying when this is a concurrent-job blocker.
+        retryAfter:
+          type: integer
+          minimum: 0
+          description: SDK-style alias for retry_after_seconds.
+        retryAfterSeconds:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for retry_after_seconds.
+        next_poll_at:
+          type: string
+          format: date-time
+          description: Absolute UTC retry time when this is a concurrent-job blocker.
+        nextPollAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for next_poll_at.
+      additionalProperties: false
+  securitySchemes:
+    developerApiKey:
+      type: http
+      scheme: bearer
+      bearerFormat: Puppetry API key
+      description: 'Use the Authorization header with a live Puppetry API key: Bearer pk_live_...'

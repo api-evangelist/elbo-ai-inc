@@ -1,0 +1,388 @@
+openapi: 3.1.0
+info:
+  title: Puppetry Developer API Beta Audio Uploads Voices API
+  description: Live Puppetry Developer API beta for Puppetry Voice API access, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.
+  version: '2026-05-11'
+  contact:
+    name: Puppetry Support
+    url: https://www.puppetry.com
+    email: support@puppetry.com
+  termsOfService: https://www.puppetry.com/tos
+  license:
+    name: Proprietary
+servers:
+- url: https://www.puppetry.com
+  description: Production
+security:
+- developerApiKey: []
+tags:
+- name: Voices
+paths:
+  /api/v1/voices/puppetry:
+    get:
+      operationId: listPuppetryVoices
+      x-openai-isConsequential: false
+      summary: List Puppetry voices
+      description: Returns the public Puppetry voice catalog available to Developer API keys with the voices:read scope. Each voice includes preview_url for fixed sample audio.
+      tags:
+      - Voices
+      security:
+      - developerApiKey: []
+      responses:
+        '200':
+          description: Public Puppetry voices
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/RateLimitLimit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/RateLimitRemaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/RateLimitReset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    Forbidden:
+      description: The API key does not include the required endpoint scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            forbidden:
+              value:
+                error: forbidden
+                message: This API key does not have the required scope
+    RateLimited:
+      description: Rate limit or monthly beta quota exceeded
+      headers:
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            rateLimited:
+              value:
+                error: rate_limited
+                message: 'Developer API beta limit exceeded: 10 requests per minute.'
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+            voiceCharacterLimit:
+              value:
+                error: voice_character_limit_exceeded
+                message: Monthly Puppetry Voice character limit exceeded
+                details:
+                  retryable: true
+                  retry_after_seconds: 86400
+                  retryAfter: 86400
+                  retryAfterSeconds: 86400
+            concurrentVideoJobLimit:
+              value:
+                error: concurrent_job_limit_exceeded
+                message: Developer API concurrent job limit exceeded
+                details:
+                  retryable: true
+                  concurrent_jobs: 2
+                  concurrentJobs: 2
+                  active_jobs: 2
+                  activeJobs: 2
+                  available_slots: 0
+                  availableSlots: 0
+                  active_job_expires_in_seconds: 512
+                  activeJobExpiresInSeconds: 512
+                  retry_after_seconds: 512
+                  retryAfter: 512
+                  retryAfterSeconds: 512
+    Unauthorized:
+      description: Missing, malformed, invalid, or revoked API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unauthorized:
+              value:
+                error: unauthorized
+                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
+  headers:
+    RetryAfter:
+      description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
+      schema:
+        type: integer
+        example: 30
+    RateLimitRemaining:
+      description: Requests remaining in the current one-minute window.
+      schema:
+        type: integer
+        example: 9
+    RateLimitReset:
+      description: Unix timestamp, in seconds, when the current rate-limit window resets.
+      schema:
+        type: integer
+        example: 1778520000
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+        example: 10
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          examples:
+          - invalid_request
+          - unauthorized
+          - rate_limited
+        message:
+          type: string
+        object:
+          type: string
+          const: video_job
+          description: Present on retryable transient video-status errors when the affected API video job is known.
+        id:
+          type: string
+          description: Present on retryable transient video-status errors. API video job ID to keep polling.
+        credits:
+          type: object
+          description: Present on retryable transient video-status errors for accepted API video jobs. Status polls are never billed, so charged is 0.
+          properties:
+            charged:
+              type: integer
+              minimum: 0
+              example: 0
+            remaining:
+              type:
+              - integer
+              - 'null'
+              minimum: 0
+              description: Current balance if available; null when the status poll did not fetch credit state.
+          additionalProperties: false
+        creation_credits:
+          $ref: '#/components/schemas/VideoJobCreationCredits'
+          description: Original create-time video credit debit evidence for the affected API video job when available.
+        creationCredits:
+          $ref: '#/components/schemas/VideoJobCreationCredits'
+          description: SDK-style alias for creation_credits.
+        retryable:
+          type: boolean
+          description: Present on retryable transient errors and non-retryable terminal video-create/status errors so generated clients can identify retry/backoff behavior without parsing details.
+        retry_blocked_reason:
+          type: string
+          description: Present on non-retryable terminal video-create/status errors. Redacted reason explaining why clients should not retry the same request.
+        retryBlockedReason:
+          type: string
+          description: SDK-style alias for retry_blocked_reason.
+        retry_block_code:
+          type: string
+          description: Present on non-retryable terminal video-create/status errors. Stable retry-block code suitable for generated clients.
+        retryBlockCode:
+          type: string
+          description: SDK-style alias for retry_block_code.
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+          description: Present on retryable transient errors. Mirrors Retry-After and details.retry_after_seconds.
+        retryAfter:
+          type: integer
+          minimum: 0
+          description: SDK-style alias for retry_after_seconds.
+        retryAfterSeconds:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for retry_after_seconds.
+        next_poll_at:
+          type: string
+          format: date-time
+          description: Present on retryable transient errors. Absolute UTC time when clients should retry the request or poll again.
+        nextPollAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for next_poll_at.
+        job_id:
+          type: string
+          description: Present on retryable transient video-status errors so clients can correlate the retry to the API video job.
+        jobId:
+          type: string
+          description: SDK-style alias for job_id.
+        task_id:
+          type: string
+          description: Task-style alias for job_id on retryable transient video-status errors.
+        taskId:
+          type: string
+          description: CamelCase task-style alias for job_id.
+        source:
+          type: string
+          enum:
+          - text
+          - audio
+          description: Video creation source for the affected API video job.
+        request_source:
+          type: string
+          enum:
+          - text
+          - audio
+          description: Alias for source.
+        requestSource:
+          type: string
+          enum:
+          - text
+          - audio
+          description: SDK-style alias for source.
+        status_url:
+          type: string
+          description: Present on retryable transient video-status errors so clients know which job resource to poll next.
+        statusUrl:
+          type: string
+          description: SDK-style alias for status_url.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time for the affected API video job.
+        createdAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for created_at.
+        expires_at:
+          type: string
+          format: date-time
+          description: When the affected API video job record expires from status lookup.
+        expiresAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for expires_at.
+        details:
+          description: Endpoint-specific diagnostic fields.
+          type: object
+          additionalProperties: true
+        content_location:
+          type: string
+          description: Body alias for the status poll URL, mirroring the Content-Location response header target for clients that cannot reliably read headers.
+        contentLocation:
+          type: string
+          description: SDK-style alias for content_location.
+      additionalProperties: true
+    VideoJobCreationCredits:
+      type: object
+      required:
+      - charged
+      - remaining_after_debit
+      properties:
+        charged:
+          type: integer
+          minimum: 0
+          example: 1
+          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
+        remaining_after_debit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
+        remainingAfterDebit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: SDK-style alias for remaining_after_debit.
+      additionalProperties: false
+    PuppetryVoice:
+      type: object
+      required:
+      - id
+      - object
+      - name
+      - provider
+      - language
+      - language_code
+      - gender
+      - description
+      - styles
+      - preview_url
+      properties:
+        id:
+          type: string
+          description: Public Puppetry voice ID.
+          example: puppetry-af_bella
+        object:
+          type: string
+          const: voice
+        name:
+          type: string
+          example: Bella
+        provider:
+          type: string
+          const: puppetry
+        language:
+          type: string
+          example: English
+        language_code:
+          type: string
+          example: en
+        gender:
+          type: string
+          example: Female
+        description:
+          type: string
+          example: Puppetry voice (English)
+        styles:
+          type: array
+          items:
+            type: string
+        preview_url:
+          type: string
+          format: uri-reference
+          description: Fixed audio preview path for this Puppetry voice.
+          example: /api/voices/puppetry-preview?voice=af_bella&language=en
+      additionalProperties: false
+    VoiceListResponse:
+      type: object
+      required:
+      - object
+      - data
+      properties:
+        object:
+          type: string
+          const: list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PuppetryVoice'
+      additionalProperties: false
+  securitySchemes:
+    developerApiKey:
+      type: http
+      scheme: bearer
+      bearerFormat: Puppetry API key
+      description: 'Use the Authorization header with a live Puppetry API key: Bearer pk_live_...'

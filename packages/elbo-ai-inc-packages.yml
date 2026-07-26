@@ -1,0 +1,21 @@
+generated: '2026-07-19'
+method: searched
+source: https://www.npmjs.com/org/puppetry.com
+packages:
+- language: javascript
+  registry: npm
+  name: "@puppetry.com/sdk"
+  version: 0.1.1
+  url: https://www.npmjs.com/package/@puppetry.com/sdk
+  install: npm i @puppetry.com/sdk
+  description: Official TypeScript SDK for the Puppetry API — create talking head videos from photos using AI.
+  homepage: https://www.puppetry.com/developer
+  official: true
+- language: javascript
+  registry: npm
+  name: "@puppetry.com/mcp-server"
+  version: 0.1.1
+  url: https://www.npmjs.com/package/@puppetry.com/mcp-server
+  install: npx -y @puppetry.com/mcp-server
+  description: MCP server for Puppetry — turn any portrait photo into a talking AI video.
+  official: true

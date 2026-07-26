@@ -1,0 +1,38 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/elbo-ai-inc-puppetry-openapi-original.json
+entities:
+- name: PuppetryVoice
+  id_field: id
+  id_prefix: puppetry-
+  key_fields: [id, name, language, language_code, gender, preview_url]
+  produced_by: [listPuppetryVoices]
+- name: VideoJob
+  id_field: id
+  key_fields: [id, status, source, video_url, credits, created_at, expires_at]
+  produced_by: [createVideoFromText, createVideoFromAudio, getVideoJob]
+- name: AudioUpload
+  id_field: upload_url
+  key_fields: [upload_url, read_url, mime_type, content_length]
+  produced_by: [createHostedAudioUploadUrl]
+- name: Usage
+  key_fields: [video_credits, video_generation.can_create, creditsRemaining]
+  produced_by: [getDeveloperApiUsage]
+- name: Speech
+  key_fields: [voice_id, text, speed]
+  produced_by: [createPuppetrySpeech]
+relationships:
+- from: Speech
+  to: PuppetryVoice
+  type: belongs_to
+  via: voice_id
+- from: VideoJob
+  to: AudioUpload
+  type: has_one
+  via: audio_url
+  note: audio-source video jobs consume a hosted upload read_url
+- from: VideoJob
+  to: Usage
+  type: belongs_to
+  via: credits
+  note: each accepted job debits one video credit

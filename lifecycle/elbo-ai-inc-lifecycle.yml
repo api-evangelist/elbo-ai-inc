@@ -1,0 +1,18 @@
+generated: '2026-07-19'
+method: searched
+source: https://www.puppetry.com/changelog
+versioning:
+  scheme: date
+  current: '2026-05-11'
+  base_path: /api/v1
+  status: beta
+  notes: Developer API is in beta; the OpenAPI info.version is a date stamp.
+changelog: https://www.puppetry.com/changelog
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: No published deprecation/sunset policy found.
+sla:
+  url: null
+status_page: null
+deprecated_operations: []

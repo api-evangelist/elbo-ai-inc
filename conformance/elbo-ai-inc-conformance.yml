@@ -1,0 +1,32 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/elbo-ai-inc-puppetry-openapi-original.json
+standards:
+- id: oauth2
+  conforms: false
+  evidence: securityScheme is http bearer (API key), no oauth2 flows declared
+- id: oidc
+  conforms: false
+- id: http-bearer-auth
+  conforms: true
+  evidence: securitySchemes.developerApiKey type http scheme bearer (pk_live_ API key)
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors use a custom JSON envelope (error/message), not application/problem+json
+- id: idempotency
+  conforms: true
+  evidence: Idempotency-Key header + idempotency_key/idempotencyKey body fields on create endpoints
+- id: rate-limit-headers
+  conforms: true
+  evidence: responses expose RateLimit-Limit / RateLimit-Remaining / Retry-After headers
+- id: pagination
+  conforms: false
+  evidence: voice list returns a full collection, no cursor/offset paging
+- id: fhir
+  conforms: false
+- id: scim
+  conforms: false
+- id: fapi
+  conforms: false
+- id: odata
+  conforms: false

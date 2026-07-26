@@ -1,0 +1,22 @@
+{
+  "provider": "elbo-ai-inc",
+  "sources": [
+    "elbo-ai-inc-audio-uploads-api-openapi.yml",
+    "elbo-ai-inc-text-to-speech-api-openapi.yml",
+    "elbo-ai-inc-usage-api-openapi.yml",
+    "elbo-ai-inc-videos-api-openapi.yml",
+    "elbo-ai-inc-voices-api-openapi.yml"
+  ],
+  "outputs": [
+    "elbo-ai-inc-audio-uploads-api-openapi.yml",
+    "elbo-ai-inc-text-to-speech-api-openapi.yml",
+    "elbo-ai-inc-usage-api-openapi.yml",
+    "elbo-ai-inc-videos-api-openapi.yml",
+    "elbo-ai-inc-voices-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

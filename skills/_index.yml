@@ -1,0 +1,16 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/elbo-ai-inc-puppetry-openapi-original.json
+skills:
+- file: elbo-ai-inc-create-video-from-text.md
+  name: Create a talking video from a photo and script
+  api: openapi/elbo-ai-inc-puppetry-openapi-original.json
+  operations: [getDeveloperApiUsage, listPuppetryVoices, createVideoFromText, getVideoJob]
+- file: elbo-ai-inc-audio-to-video.md
+  name: Upload audio and create a lip-synced video
+  api: openapi/elbo-ai-inc-puppetry-openapi-original.json
+  operations: [createHostedAudioUploadUrl, createVideoFromAudio, getVideoJob]
+- file: elbo-ai-inc-text-to-speech.md
+  name: Generate Puppetry TTS speech
+  api: openapi/elbo-ai-inc-puppetry-openapi-original.json
+  operations: [listPuppetryVoices, createPuppetrySpeech]

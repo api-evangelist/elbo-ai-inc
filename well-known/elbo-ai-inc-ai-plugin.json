@@ -1,0 +1,19 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Puppetry Developer API",
+  "name_for_model": "puppetry",
+  "description_for_human": "Use the Puppetry Developer API beta for Puppetry Voice API access, TTS, hosted audio uploads, and credit-backed video jobs with a Studio API key.",
+  "description_for_model": "Puppetry exposes a Developer API beta for agents and apps. Live capabilities are GET /api/v1/voices/puppetry to list voices with id, language_code, and preview_url fields, POST /api/v1/tts/puppetry to generate speech from text using public puppetry-* voice_id values, POST /api/v1/uploads/audio-url to create hosted audio upload URLs using mime_type and content_length, GET /api/v1/usage to inspect video credit balance and monthly API video usage, POST /api/v1/videos/text to create credit-backed text-to-video jobs from image_url plus text, POST /api/v1/videos/audio to create credit-backed audio-to-video jobs from image_url plus audio_url, and GET /api/v1/videos/{jobId} to poll queued/processing/completed/failed status, video_url, and failed-job retryable/retry_blocked_reason metadata. Use a bearer Puppetry Developer API key from Studio settings. The beta does not expose third-party voice provider APIs.",
+  "auth": {
+    "type": "user_http",
+    "authorization_type": "bearer"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://www.puppetry.com/openapi.json",
+    "is_user_authenticated": true
+  },
+  "logo_url": "https://www.puppetry.com/puppetry-logo.png",
+  "contact_email": "hi@puppetry.com",
+  "legal_info_url": "https://www.puppetry.com/tos"
+}

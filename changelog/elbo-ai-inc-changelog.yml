@@ -1,0 +1,34 @@
+generated: '2026-07-19'
+method: searched
+source: https://www.puppetry.com/changelog
+scheme: date-grouped product changelog (What's New)
+current_period: '2026-04'
+entries:
+- date: '2026-04'
+  breaking: false
+  highlights:
+  - Phoneme-accurate cartoon lip sync driven by Whisper word timings
+  - Animate Anything object puppets (viseme renderer beyond portraits)
+  - Education Hub resource center
+- date: '2026-03'
+  breaking: false
+  highlights:
+  - AI Stories multi-character videos
+  - 65+ language support (expanded from 29)
+  - HD portrait mode and faster video generation
+- date: '2026-02'
+  breaking: false
+  highlights:
+  - Caption Studio auto subtitles
+  - 500+ AI voices in 65+ languages
+  - Video translation across 32 languages
+- date: '2026-01'
+  breaking: false
+  highlights:
+  - Voice cloning from audio samples
+  - Canva integration
+- date: '2025-12'
+  breaking: false
+  highlights:
+  - AI image generator
+  - Puppet gallery (188K+ puppets)

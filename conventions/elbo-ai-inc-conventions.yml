@@ -1,0 +1,44 @@
+generated: '2026-07-19'
+method: searched
+source: https://www.puppetry.com/developer
+authentication:
+  style: bearer-api-key
+  header: Authorization= Bearer pk_live_...
+  ref: authentication/elbo-ai-inc-authentication.yml
+idempotency:
+  supported: true
+  header: Idempotency-Key
+  body_aliases: [idempotency_key, idempotencyKey]
+  scope: create endpoints (videos/text, videos/audio, uploads/audio-url)
+  notes: Makes retries safe; a job is charged one video credit only when accepted.
+pagination:
+  supported: false
+  notes: Voice list returns the full collection; no cursor/offset paging.
+versioning:
+  scheme: date
+  current: 2026-05-11
+  in: spec info.version; base path /api/v1
+rate_limits:
+  signaling_headers: [RateLimit-Limit, RateLimit-Remaining, Retry-After]
+  beta_limits:
+    requests_per_minute: 10
+    concurrent_jobs: 2
+    active_api_keys: 1
+    puppetry_voice_chars_per_month: 100000
+    hosted_audio_storage_gb: 2
+    audio_uploads_per_month: 250
+    max_audio_upload_mb: 50
+  ref: rate-limits (see llms.txt fair-use limits)
+async_pattern:
+  style: job-and-poll
+  create_returns: [id/jobId, status_url/statusUrl, Retry-After]
+  poll: GET /api/v1/videos/{jobId}
+  statuses: [queued, processing, completed, failed]
+error_envelope:
+  media_type: application/json
+  required: [error, message]
+  ref: errors/elbo-ai-inc-problem-types.yml
+readiness_signal:
+  endpoint: GET /api/v1/usage
+  fields: [video_credits, video_generation.can_create, retry_after_seconds]
+  notes: Agents should check can_create/canCreate before creating videos.

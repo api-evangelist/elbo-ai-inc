@@ -1,25 +1,190 @@
 aid: elbo-ai-inc
 name: ELBO AI, INC
-description: ELBO AI, INC is a company surfaced as a portfolio company of 500-global and added to the
-  API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  ELBO AI, INC operates Puppetry (puppetry.com), an AI video-creation platform that
+  turns any portrait photo into a realistic lip-synced talking-head video. Users upload
+  an image, provide a script or audio, pick from 500+ AI voices across 65+ languages, and
+  Puppetry renders a video in minutes — with voice cloning, AI Stories multi-scene
+  storytelling, caption studio, and cartoon/object animation. Beyond the studio web and
+  iOS apps and a Canva integration, Puppetry ships a Developer API beta (Studio plan) for
+  agents and app integrations: a Puppetry Voice API (list voices + TTS), hosted audio
+  uploads with signed URLs, and credit-backed text-to-video and audio-to-video jobs with
+  idempotent creation and job-and-poll status. It publishes an OpenAPI 3.1 spec, an
+  official TypeScript SDK, an MCP server, llms.txt, and an ai-plugin.json manifest.
+  Founded by ex-Google/Microsoft/Apple/Amazon engineers; backed by 500 Global.
 url: https://raw.githubusercontent.com/api-evangelist/elbo-ai-inc/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://www.puppetry.com/puppetry-logo.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - 500-global
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: enriched-from-portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
-apis: []
+- Artificial Intelligence
+- Video
+- Text to Speech
+- Voice
+- Generative AI
+- Avatars
+- Content Creation
+- Developer API
+- MCP
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: elbo-ai-inc:elbo-ai-inc-audio-uploads-api
+  name: ELBO AI, INC Audio Uploads API
+  description: The Audio Uploads API from ELBO AI, INC — 1 operation(s) for audio uploads.
+  humanURL: https://www.puppetry.com/developer
+  baseURL: https://www.puppetry.com/api/v1
+  tags:
+  - Audio Uploads
+  properties:
+  - type: OpenAPI
+    url: openapi/elbo-ai-inc-audio-uploads-api-openapi.yml
+  - type: APIReference
+    url: https://www.puppetry.com/developer
+  - type: Documentation
+    url: https://www.puppetry.com/for-agents
+- aid: elbo-ai-inc:elbo-ai-inc-text-to-speech-api
+  name: ELBO AI, INC Text to Speech API
+  description: The Text to Speech API from ELBO AI, INC — 1 operation(s) for text to speech.
+  humanURL: https://www.puppetry.com/developer
+  baseURL: https://www.puppetry.com/api/v1
+  tags:
+  - Text to Speech
+  properties:
+  - type: OpenAPI
+    url: openapi/elbo-ai-inc-text-to-speech-api-openapi.yml
+  - type: APIReference
+    url: https://www.puppetry.com/developer
+  - type: Documentation
+    url: https://www.puppetry.com/for-agents
+- aid: elbo-ai-inc:elbo-ai-inc-usage-api
+  name: ELBO AI, INC Usage API
+  description: The Usage API from ELBO AI, INC — 1 operation(s) for usage.
+  humanURL: https://www.puppetry.com/developer
+  baseURL: https://www.puppetry.com/api/v1
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/elbo-ai-inc-usage-api-openapi.yml
+  - type: APIReference
+    url: https://www.puppetry.com/developer
+  - type: Documentation
+    url: https://www.puppetry.com/for-agents
+- aid: elbo-ai-inc:elbo-ai-inc-videos-api
+  name: ELBO AI, INC Videos API
+  description: The Videos API from ELBO AI, INC — 3 operation(s) for videos.
+  humanURL: https://www.puppetry.com/developer
+  baseURL: https://www.puppetry.com/api/v1
+  tags:
+  - Videos
+  properties:
+  - type: OpenAPI
+    url: openapi/elbo-ai-inc-videos-api-openapi.yml
+  - type: APIReference
+    url: https://www.puppetry.com/developer
+  - type: Documentation
+    url: https://www.puppetry.com/for-agents
+- aid: elbo-ai-inc:elbo-ai-inc-voices-api
+  name: ELBO AI, INC Voices API
+  description: The Voices API from ELBO AI, INC — 1 operation(s) for voices.
+  humanURL: https://www.puppetry.com/developer
+  baseURL: https://www.puppetry.com/api/v1
+  tags:
+  - Voices
+  properties:
+  - type: OpenAPI
+    url: openapi/elbo-ai-inc-voices-api-openapi.yml
+  - type: APIReference
+    url: https://www.puppetry.com/developer
+  - type: Documentation
+    url: https://www.puppetry.com/for-agents
 common:
 - type: Website
   url: https://puppetry.com
+- type: DeveloperPortal
+  url: https://www.puppetry.com/developer
+- type: Documentation
+  url: https://www.puppetry.com/for-agents
+- type: APIReference
+  url: https://www.puppetry.com/developer
+- type: GettingStarted
+  url: https://www.puppetry.com/developer
+- type: Blog
+  url: https://www.puppetry.com/blog
+- type: ChangeLog
+  url: https://www.puppetry.com/changelog
+- type: Support
+  url: https://www.puppetry.com/support
+- type: Pricing
+  url: https://www.puppetry.com/pricing
+- type: SignUp
+  url: https://www.puppetry.com/sign-up
+- type: Login
+  url: https://www.puppetry.com/sign-in
+- type: TermsOfService
+  url: https://www.puppetry.com/tos
+- type: PrivacyPolicy
+  url: https://www.puppetry.com/privacy
+- type: SDKs
+  url: packages/elbo-ai-inc-packages.yml
+- type: Packages
+  url: packages/elbo-ai-inc-packages.yml
+- type: MCPServer
+  url: mcp/elbo-ai-inc-mcp.yml
+- type: LLMsTxt
+  url: llms/elbo-ai-inc-llms.txt
+- type: WellKnown
+  url: well-known/elbo-ai-inc-well-known.yml
+- type: Authentication
+  url: authentication/elbo-ai-inc-authentication.yml
+- type: Conventions
+  url: conventions/elbo-ai-inc-conventions.yml
+- type: Idempotency
+  url: conventions/elbo-ai-inc-conventions.yml
+- type: RateLimits
+  url: conventions/elbo-ai-inc-conventions.yml
+- type: ErrorCatalog
+  url: errors/elbo-ai-inc-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/elbo-ai-inc-lifecycle.yml
+- type: Conformance
+  url: conformance/elbo-ai-inc-conformance.yml
+- type: DataModel
+  url: data-model/elbo-ai-inc-data-model.yml
+- type: DomainSecurity
+  url: security/elbo-ai-inc-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/elbo-ai-inc-agentic-access.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Changelog
+  url: changelog/elbo-ai-inc-changelog.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

@@ -1,0 +1,22 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Puppetry Developer API
+  version: 1.0.0
+extends: openapi/elbo-ai-inc-puppetry-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: elbo-ai-inc
+    x-apievangelist-product: Puppetry Developer API Beta
+    x-apievangelist-agent-ready: true
+    x-apievangelist-notes: >-
+      Bearer API-key auth (pk_live_ prefix). Idempotency-Key supported on create
+      endpoints. Rate-limit signaling via RateLimit-Limit / Retry-After headers.
+      Ships an official MCP server and TypeScript SDK, llms.txt, and ai-plugin.json.
+- target: $.info
+  update:
+    x-agentic-access-catalog: agentic-access/elbo-ai-inc-agentic-access.yml
+- target: $.tags
+  update:
+  - name: Agent Ready
+    description: Endpoints suitable for agent orchestration via the Puppetry MCP server.

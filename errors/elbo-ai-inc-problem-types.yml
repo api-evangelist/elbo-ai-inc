@@ -1,0 +1,75 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/elbo-ai-inc-puppetry-openapi-original.json
+format: custom-json
+envelope:
+  media_type: application/json
+  required: [error, message]
+  fields:
+    error: stable machine-readable code (e.g. invalid_request, unauthorized, rate_limited, insufficient_credits)
+    message: human-readable description
+    retryable: boolean on transient/terminal video errors
+    retry_after_seconds: mirrors Retry-After on 429/503
+    retry_blocked_reason: redacted reason on non-retryable terminal errors
+    details: endpoint-specific diagnostics
+problems:
+- status: 400
+  code: invalid_request
+  title: Invalid request
+  remediation: Check required body fields (image_url, text/audio_url, voice_id) and content types.
+  source_operations: [createPuppetrySpeech, createHostedAudioUploadUrl, createVideoFromText, createVideoFromAudio, getVideoJob]
+- status: 401
+  code: unauthorized
+  title: Missing or invalid API key
+  remediation: Send Authorization= Bearer pk_live_... from Studio settings API keys.
+  source_operations: [listPuppetryVoices, createPuppetrySpeech, createHostedAudioUploadUrl, getDeveloperApiUsage, createVideoFromText, createVideoFromAudio, getVideoJob]
+- status: 402
+  code: insufficient_credits
+  title: Insufficient video credits
+  remediation: Response includes checkout_url and a top_up message; purchase a credit pack.
+  source_operations: [createHostedAudioUploadUrl, createVideoFromText, createVideoFromAudio]
+- status: 403
+  code: forbidden
+  title: Plan does not permit Developer API access
+  remediation: Developer API beta requires the Studio plan.
+  source_operations: [listPuppetryVoices, createPuppetrySpeech, createHostedAudioUploadUrl, getDeveloperApiUsage, createVideoFromText, createVideoFromAudio, getVideoJob]
+- status: 404
+  code: not_found
+  title: Voice or job not found
+  remediation: Use a public puppetry-* voice id or a valid jobId.
+  source_operations: [createPuppetrySpeech, createVideoFromText, getVideoJob]
+- status: 409
+  code: conflict
+  title: Idempotency / concurrency conflict
+  remediation: Reuse the same Idempotency-Key for retries; respect the 2-concurrent-job limit.
+  source_operations: [createHostedAudioUploadUrl, createVideoFromText, createVideoFromAudio]
+- status: 413
+  code: payload_too_large
+  title: Uploaded audio exceeds size limit
+  remediation: Keep uploaded audio under 50MB.
+  source_operations: [createHostedAudioUploadUrl, createVideoFromText, createVideoFromAudio]
+- status: 415
+  code: unsupported_media_type
+  title: Unsupported content type
+  remediation: Send a supported audio mime_type with matching Content-Type on PUT.
+  source_operations: [createHostedAudioUploadUrl, createVideoFromText, createVideoFromAudio]
+- status: 429
+  code: rate_limited
+  title: Rate limit exceeded
+  remediation: Back off using Retry-After / retry_after_seconds; beta limit is 10 req/min, 2 concurrent jobs.
+  source_operations: [listPuppetryVoices, createPuppetrySpeech, createHostedAudioUploadUrl, getDeveloperApiUsage, createVideoFromText, createVideoFromAudio, getVideoJob]
+- status: 502
+  code: upstream_error
+  title: Upstream generation error
+  remediation: Transient; retryable=true, retry after the hinted delay.
+  source_operations: [createPuppetrySpeech, createHostedAudioUploadUrl, createVideoFromText, createVideoFromAudio, getVideoJob]
+- status: 503
+  code: service_unavailable
+  title: Service temporarily unavailable
+  remediation: Transient; retry with backoff.
+  source_operations: [createPuppetrySpeech, createHostedAudioUploadUrl, getDeveloperApiUsage, createVideoFromText, createVideoFromAudio]
+- status: 504
+  code: gateway_timeout
+  title: Status poll timeout
+  remediation: Retryable; keep polling GET /api/v1/videos/{jobId}.
+  source_operations: [getVideoJob]

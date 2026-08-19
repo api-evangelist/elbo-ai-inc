@@ -1,0 +1,377 @@
+{
+  "item": [
+    {
+      "id": "85d52d7f-b87e-4e0b-a27c-78f0605bea19",
+      "name": "Usage",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "dc2955b4-620d-4502-b62c-5577ea9f28c8",
+          "name": "Get Developer API usage",
+          "request": {
+            "name": "Get Developer API usage",
+            "description": {
+              "content": "Returns the authenticated workspace's current video credit balance plus monthly credit usage for credit-backed Developer API video jobs. Requires the videos:read scope. When video generation is blocked by active job slots or usage data is temporarily unavailable, the response includes Retry-After and X-Puppetry-Next-Poll-At so agents can pace the next create or usage attempt.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "usage"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "e9115492-3d1a-4fe9-b83a-69b0d1f212a6",
+              "name": "Current Developer API usage",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Requests allowed in the current one-minute window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "10"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current one-minute window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp, in seconds, when the current rate-limit window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "1778520000"
+                },
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "disabled": false,
+                  "description": "Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.",
+                  "key": "X-Puppetry-Next-Poll-At",
+                  "value": "2026-06-22T08:50:30.000Z"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"string\",\n  \"video_credits\": {\n    \"balance\": 9490,\n    \"month\": \"0444-22\",\n    \"reset_at\": \"2005-02-23T15:15:23.938Z\",\n    \"used\": 1416,\n    \"refunded\": 4722,\n    \"net_used\": 9918,\n    \"transactions\": 7257,\n    \"current_api_key\": {\n      \"used\": 2549,\n      \"refunded\": 575,\n      \"net_used\": 2163,\n      \"transactions\": 4437,\n      \"id\": \"string\",\n      \"key_id\": \"string\",\n      \"keyId\": \"string\",\n      \"name\": \"string\",\n      \"key_prefix\": \"string\",\n      \"keyPrefix\": \"string\",\n      \"type\": \"mcp\",\n      \"netUsed\": 6322\n    },\n    \"resetAt\": \"2002-12-02T18:26:03.280Z\",\n    \"netUsed\": 3043,\n    \"currentApiKey\": {\n      \"used\": 4644,\n      \"refunded\": 9088,\n      \"net_used\": 9870,\n      \"transactions\": 3596,\n      \"id\": \"string\",\n      \"key_id\": \"string\",\n      \"keyId\": \"string\",\n      \"name\": \"string\",\n      \"key_prefix\": \"string\",\n      \"keyPrefix\": \"string\",\n      \"type\": \"developer_api\",\n      \"netUsed\": 6559\n    }\n  },\n  \"videoCredits\": {\n    \"balance\": 4976,\n    \"month\": \"2012-39\",\n    \"reset_at\": \"2024-05-24T04:44:13.635Z\",\n    \"used\": 2332,\n    \"refunded\": 3443,\n    \"net_used\": 6661,\n    \"transactions\": 8468,\n    \"current_api_key\": {\n      \"used\": 8122,\n      \"refunded\": 9022,\n      \"net_used\": 3073,\n      \"transactions\": 6470,\n      \"id\": \"string\",\n      \"key_id\": \"string\",\n      \"keyId\": \"string\",\n      \"name\": \"string\",\n      \"key_prefix\": \"string\",\n      \"keyPrefix\": \"string\",\n      \"type\": \"mcp\",\n      \"netUsed\": 9801\n    },\n    \"resetAt\": \"1956-08-05T14:53:01.993Z\",\n    \"netUsed\": 1620,\n    \"currentApiKey\": {\n      \"used\": 8208,\n      \"refunded\": 6709,\n      \"net_used\": 8051,\n      \"transactions\": 9256,\n      \"id\": \"string\",\n      \"key_id\": \"string\",\n      \"keyId\": \"string\",\n      \"name\": \"string\",\n      \"key_prefix\": \"string\",\n      \"keyPrefix\": \"string\",\n      \"type\": \"developer_api\",\n      \"netUsed\": 6846\n    }\n  },\n  \"video_generation\": {\n    \"can_create\": false,\n    \"required_credits\": 4793,\n    \"credits_remaining\": 9856,\n    \"reason\": \"insufficient_video_credits\",\n    \"canCreate\": false,\n    \"requiredCredits\": 3368,\n    \"creditsRemaining\": 8318,\n    \"concurrent_jobs\": 4489,\n    \"concurrentJobs\": 7206,\n    \"active_jobs\": 8750,\n    \"activeJobs\": 5803,\n    \"available_slots\": 1974,\n    \"availableSlots\": 8870,\n    \"active_job_expires_in_seconds\": 6971,\n    \"activeJobExpiresInSeconds\": 9665,\n    \"retry_after_seconds\": 6979,\n    \"retryAfter\": 5921,\n    \"retryAfterSeconds\": 748,\n    \"next_poll_at\": \"1955-10-15T07:42:21.590Z\",\n    \"nextPollAt\": \"1956-01-11T21:58:03.407Z\",\n    \"blockers\": [\n      {\n        \"code\": \"insufficient_video_credits\",\n        \"reason\": \"concurrent_job_limit_reached\",\n        \"retryable\": true,\n        \"required_credits\": 4780,\n        \"requiredCredits\": 4578,\n        \"credits_remaining\": 7327,\n        \"creditsRemaining\": 6296,\n        \"retry_block_code\": \"string\",\n        \"retryBlockCode\": \"string\",\n        \"concurrent_jobs\": 8812,\n        \"concurrentJobs\": 4727,\n        \"active_jobs\": 5344,\n        \"activeJobs\": 7556,\n        \"available_slots\": 4375,\n        \"availableSlots\": 3856,\n        \"active_job_expires_in_seconds\": 5647,\n        \"activeJobExpiresInSeconds\": 4144,\n        \"retry_after_seconds\": 4825,\n        \"retryAfter\": 280,\n        \"retryAfterSeconds\": 3525,\n        \"next_poll_at\": \"1975-09-11T23:52:27.649Z\",\n        \"nextPollAt\": \"1977-04-22T01:08:36.228Z\"\n      },\n      {\n        \"code\": \"insufficient_video_credits\",\n        \"reason\": \"insufficient_video_credits\",\n        \"retryable\": false,\n        \"required_credits\": 4980,\n        \"requiredCredits\": 7016,\n        \"credits_remaining\": 6731,\n        \"creditsRemaining\": 6390,\n        \"retry_block_code\": \"string\",\n        \"retryBlockCode\": \"string\",\n        \"concurrent_jobs\": 9453,\n        \"concurrentJobs\": 5189,\n        \"active_jobs\": 4885,\n        \"activeJobs\": 1302,\n        \"available_slots\": 6901,\n        \"availableSlots\": 612,\n        \"active_job_expires_in_seconds\": 5493,\n        \"activeJobExpiresInSeconds\": 6230,\n        \"retry_after_seconds\": 1094,\n        \"retryAfter\": 9948,\n        \"retryAfterSeconds\": 3326,\n        \"next_poll_at\": \"2026-02-03T23:10:27.301Z\",\n        \"nextPollAt\": \"2006-12-21T07:13:31.973Z\"\n      }\n    ]\n  },\n  \"videoGeneration\": {\n    \"can_create\": false,\n    \"required_credits\": 4999,\n    \"credits_remaining\": 7471,\n    \"reason\": \"concurrent_job_limit_reached\",\n    \"canCreate\": true,\n    \"requiredCredits\": 1884,\n    \"creditsRemaining\": 8250,\n    \"concurrent_jobs\": 950,\n    \"concurrentJobs\": 7410,\n    \"active_jobs\": 323,\n    \"activeJobs\": 4940,\n    \"available_slots\": 6521,\n    \"availableSlots\": 9078,\n    \"active_job_expires_in_seconds\": 7795,\n    \"activeJobExpiresInSeconds\": 1806,\n    \"retry_after_seconds\": 1438,\n    \"retryAfter\": 7508,\n    \"retryAfterSeconds\": 7976,\n    \"next_poll_at\": \"1980-07-07T03:15:35.340Z\",\n    \"nextPollAt\": \"1962-10-11T23:52:42.911Z\",\n    \"blockers\": [\n      {\n        \"code\": \"insufficient_video_credits\",\n        \"reason\": \"insufficient_video_credits\",\n        \"retryable\": false,\n        \"required_credits\": 9223,\n        \"requiredCredits\": 6409,\n        \"credits_remaining\": 8832,\n        \"creditsRemaining\": 3369,\n        \"retry_block_code\": \"string\",\n        \"retryBlockCode\": \"string\",\n        \"concurrent_jobs\": 5264,\n        \"concurrentJobs\": 2658,\n        \"active_jobs\": 6822,\n        \"activeJobs\": 6565,\n        \"available_slots\": 8283,\n        \"availableSlots\": 9839,\n        \"active_job_expires_in_seconds\": 9244,\n        \"activeJobExpiresInSeconds\": 6100,\n        \"retry_after_seconds\": 6898,\n        \"retryAfter\": 7988,\n        \"retryAfterSeconds\": 176,\n        \"next_poll_at\": \"1950-07-16T07:18:04.834Z\",\n        \"nextPollAt\": \"1952-10-19T08:03:00.934Z\"\n      },\n      {\n        \"code\": \"insufficient_video_credits\",\n        \"reason\": \"insufficient_video_credits\",\n        \"retryable\": true,\n        \"required_credits\": 3668,\n        \"requiredCredits\": 1711,\n        \"credits_remaining\": 5392,\n        \"creditsRemaining\": 6524,\n        \"retry_block_code\": \"string\",\n        \"retryBlockCode\": \"string\",\n        \"concurrent_jobs\": 5763,\n        \"concurrentJobs\": 3486,\n        \"active_jobs\": 4616,\n        \"activeJobs\": 6515,\n        \"available_slots\": 9182,\n        \"availableSlots\": 4345,\n        \"active_job_expires_in_seconds\": 6712,\n        \"activeJobExpiresInSeconds\": 8986,\n        \"retry_after_seconds\": 1507,\n        \"retryAfter\": 5091,\n        \"retryAfterSeconds\": 8347,\n        \"next_poll_at\": \"1991-07-04T20:46:09.067Z\",\n        \"nextPollAt\": \"2019-06-22T13:39:25.940Z\"\n      }\n    ]\n  },\n  \"creditsTotal\": 9294,\n  \"creditsUsed\": 5818,\n  \"creditsRemaining\": 1971,\n  \"periodStart\": \"0993-87-01\",\n  \"periodEnd\": \"1980-03-29T08:07:56.075Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b7e8603c-77bb-4fec-be3a-1c5650e35edf",
+              "name": "Missing, malformed, invalid, or revoked API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"message\": \"Missing or invalid Authorization header. Use: Bearer pk_live_...\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b44b91a9-e3f5-4eb9-b7ab-dffd244e5903",
+              "name": "The API key does not include the required endpoint scope.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"forbidden\",\n  \"message\": \"This API key does not have the required scope\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4f98a285-9b21-418e-a2f8-aa172a113e56",
+              "name": "Rate limit or monthly beta quota exceeded",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Requests allowed in the current one-minute window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "10"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current one-minute window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp, in seconds, when the current rate-limit window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "1778520000"
+                },
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"rate_limited\",\n  \"message\": \"Developer API beta limit exceeded: 10 requests per minute.\",\n  \"retryable\": true,\n  \"retry_after_seconds\": 30,\n  \"retryAfter\": 30,\n  \"retryAfterSeconds\": 30,\n  \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n  \"nextPollAt\": \"2026-06-22T08:50:30.000Z\",\n  \"details\": {\n    \"retryable\": true,\n    \"retry_after_seconds\": 30,\n    \"retryAfter\": 30,\n    \"retryAfterSeconds\": 30,\n    \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n    \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e83b34aa-3e45-4bad-9c72-c53d4a4eae30",
+              "name": "A beta quota, usage lookup, or job counter is temporarily unavailable.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "disabled": false,
+                  "description": "Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.",
+                  "key": "X-Puppetry-Next-Poll-At",
+                  "value": "2026-06-22T08:50:30.000Z"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"api_auth_unavailable\",\n  \"message\": \"Developer API authentication is temporarily unavailable\",\n  \"retryable\": true,\n  \"retry_after_seconds\": 30,\n  \"retryAfter\": 30,\n  \"retryAfterSeconds\": 30,\n  \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n  \"nextPollAt\": \"2026-06-22T08:50:30.000Z\",\n  \"details\": {\n    \"retryable\": true,\n    \"retry_after_seconds\": 30,\n    \"retryAfter\": 30,\n    \"retryAfterSeconds\": 30,\n    \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n    \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://www.puppetry.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "14abe16f-d83e-441a-b8d7-0e80fd19d115",
+    "name": "Puppetry Developer API Beta Audio Uploads Usage API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Live Puppetry Developer API beta for Puppetry Voice API access, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.\n\nContact Support:\n Name: Puppetry Support\n Email: support@puppetry.com",
+      "type": "text/plain"
+    }
+  }
+}

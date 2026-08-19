@@ -12,7 +12,8 @@ server:
   - Claude Desktop
   - OpenAI Codex CLI
   - Cursor
-  description: Official Puppetry MCP server — turn any portrait photo into a talking AI video with 500+ voices.
+  description: Official Puppetry MCP server — turn any portrait photo into a talking AI video with 500+
+    voices.
 tools:
 - name: list_puppetry_voices
   description: List Puppetry voices with id, language, gender, and preview_url.
@@ -35,3 +36,9 @@ tools:
 - name: get_video_job
   description: Poll queued/processing/completed/failed status for a video job.
   source_operation: openapi/elbo-ai-inc-puppetry-openapi-original.json#getVideoJob
+deployment:
+  mode: local-stdio
+  verified: searched
+  tools: 7
+  checked: '2026-08-12'
+  source: catalog MCP census

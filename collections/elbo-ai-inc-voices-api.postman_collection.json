@@ -1,0 +1,313 @@
+{
+  "item": [
+    {
+      "id": "de7010a8-09b1-423c-b155-85e0d4bbefc3",
+      "name": "Voices",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2de38d89-e6cc-4523-b19b-c4e9a756f2ba",
+          "name": "List Puppetry voices",
+          "request": {
+            "name": "List Puppetry voices",
+            "description": {
+              "content": "Returns the public Puppetry voice catalog available to Developer API keys with the voices:read scope. Each voice includes preview_url for fixed sample audio.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "voices",
+                "puppetry"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c8864481-93eb-4222-92c1-caf8bea3533c",
+              "name": "Public Puppetry voices",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "voices",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Requests allowed in the current one-minute window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "10"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current one-minute window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp, in seconds, when the current rate-limit window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "1778520000"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"string\",\n  \"data\": [\n    {\n      \"id\": \"puppetry-af_bella\",\n      \"object\": \"string\",\n      \"name\": \"Bella\",\n      \"provider\": \"string\",\n      \"language\": \"English\",\n      \"language_code\": \"en\",\n      \"gender\": \"Female\",\n      \"description\": \"Puppetry voice (English)\",\n      \"styles\": [\n        \"string\",\n        \"string\"\n      ],\n      \"preview_url\": \"/api/voices/puppetry-preview?voice=af_bella&language=en\"\n    },\n    {\n      \"id\": \"puppetry-af_bella\",\n      \"object\": \"string\",\n      \"name\": \"Bella\",\n      \"provider\": \"string\",\n      \"language\": \"English\",\n      \"language_code\": \"en\",\n      \"gender\": \"Female\",\n      \"description\": \"Puppetry voice (English)\",\n      \"styles\": [\n        \"string\",\n        \"string\"\n      ],\n      \"preview_url\": \"/api/voices/puppetry-preview?voice=af_bella&language=en\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "abd43386-cc29-471b-8989-a9ab8edb7adc",
+              "name": "Missing, malformed, invalid, or revoked API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "voices",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"message\": \"Missing or invalid Authorization header. Use: Bearer pk_live_...\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1f4fe861-099b-40e3-b776-0d598ec84dcd",
+              "name": "The API key does not include the required endpoint scope.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "voices",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"forbidden\",\n  \"message\": \"This API key does not have the required scope\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2a619b1c-2097-4b29-978f-c9bddb9be88c",
+              "name": "Rate limit or monthly beta quota exceeded",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "voices",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Requests allowed in the current one-minute window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "10"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current one-minute window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp, in seconds, when the current rate-limit window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "1778520000"
+                },
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"rate_limited\",\n  \"message\": \"Developer API beta limit exceeded: 10 requests per minute.\",\n  \"retryable\": true,\n  \"retry_after_seconds\": 30,\n  \"retryAfter\": 30,\n  \"retryAfterSeconds\": 30,\n  \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n  \"nextPollAt\": \"2026-06-22T08:50:30.000Z\",\n  \"details\": {\n    \"retryable\": true,\n    \"retry_after_seconds\": 30,\n    \"retryAfter\": 30,\n    \"retryAfterSeconds\": 30,\n    \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n    \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://www.puppetry.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "4dcc1a22-e041-41ab-a8da-687d3ae0e1a1",
+    "name": "Puppetry Developer API Beta Audio Uploads Voices API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Live Puppetry Developer API beta for Puppetry Voice API access, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.\n\nContact Support:\n Name: Puppetry Support\n Email: support@puppetry.com",
+      "type": "text/plain"
+    }
+  }
+}

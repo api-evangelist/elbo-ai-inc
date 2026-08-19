@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Puppetry Developer API Beta Audio Uploads Usage API",
+    "version": "2026-05-11"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Usage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Developer API usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.puppetry.com/api/v1/usage",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the authenticated workspace's current video credit balance plus monthly credit usage for credit-backed Developer API video jobs. Requires the videos:read scope. When video generation is blocked by active job slots or usage data is temporarily unavailable, the response includes Retry-After and X-Puppetry-Next-Poll-At so agents can pace the next create or usage attempt."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

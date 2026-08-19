@@ -1,0 +1,96 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Puppetry Developer API Beta Audio Uploads Videos API",
+    "version": "2026-05-11"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Videos",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a video from text",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://www.puppetry.com/api/v1/videos/text",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Queues a credit-backed text-to-video job using a hosted image URL and a Puppetry voice. Requires the videos:create scope. Accepted queued responses and non-terminal Idempotency-Key replays include Retry-After, X-Puppetry-Next-Poll-At, plus absolute Location/Content-Location, Puppetry-Operation-Id, Puppetry-Request-Id, and X-Puppetry-Credits-* headers when debit metadata is available so clients can pace, locate, trace, and reconcile the first status poll."
+        },
+        {
+          "info": {
+            "name": "Create a video from audio",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://www.puppetry.com/api/v1/videos/audio",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Queues a credit-backed audio-to-video job using hosted image and audio URLs. Requires the videos:create scope. Accepted queued responses and non-terminal Idempotency-Key replays include Retry-After, X-Puppetry-Next-Poll-At, plus absolute Location/Content-Location, Puppetry-Operation-Id, Puppetry-Request-Id, and X-Puppetry-Credits-* headers when debit metadata is available so clients can pace, locate, trace, and reconcile the first status poll."
+        },
+        {
+          "info": {
+            "name": "Get video job status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.puppetry.com/api/v1/videos/:jobId",
+            "params": [
+              {
+                "name": "jobId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Polls a Developer API video job created by the same API key. Requires the videos:read scope. Jobs created with another key, user, or org return 404. Status responses include absolute Location, Content-Location, Puppetry-Operation-Id, and Puppetry-Request-Id headers with the same poll target; queued or processing 200 responses also include Retry-After and X-Puppetry-Next-Poll-At so clients can pace polling."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

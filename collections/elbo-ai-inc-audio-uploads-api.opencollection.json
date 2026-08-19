@@ -1,0 +1,49 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Puppetry Developer API Beta Audio Uploads API",
+    "version": "2026-05-11"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Audio Uploads",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a signed hosted audio upload URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://www.puppetry.com/api/v1/uploads/audio-url",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a short-lived signed PUT URL for existing audio and a short-lived read URL for the uploaded asset. Send an Idempotency-Key header, or idempotencyKey/idempotency_key in the JSON body when custom headers are unavailable, so a lost response does not reserve duplicate hosted-upload quota. For audio-to-video workflows, send require_video_readiness=true to fail before reserving upload quota when video credits or active slots are blocked; active-slot blockers and retryable transient failures in"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

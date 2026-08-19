@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Puppetry Developer API Beta Audio Uploads Voices API",
+    "version": "2026-05-11"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Voices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Puppetry voices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.puppetry.com/api/v1/voices/puppetry",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the public Puppetry voice catalog available to Developer API keys with the voices:read scope. Each voice includes preview_url for fixed sample audio."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

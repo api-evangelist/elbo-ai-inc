@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Puppetry Developer API Beta Audio Uploads Text to Speech API",
+    "version": "2026-05-11"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Text to Speech",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate speech with a Puppetry voice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://www.puppetry.com/api/v1/tts/puppetry",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a hosted WAV audio file from text using a public Puppetry voice. Requires the tts:create scope."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,850 @@
+{
+  "item": [
+    {
+      "id": "11952160-6fda-477e-9828-38f49194d0ca",
+      "name": "Audio Uploads",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0c1a7f8f-3ef7-47d2-be4d-b00c5dc99509",
+          "name": "Create a signed hosted audio upload URL",
+          "request": {
+            "name": "Create a signed hosted audio upload URL",
+            "description": {
+              "content": "Creates a short-lived signed PUT URL for existing audio and a short-lived read URL for the uploaded asset. Send an Idempotency-Key header, or idempotencyKey/idempotency_key in the JSON body when custom headers are unavailable, so a lost response does not reserve duplicate hosted-upload quota. For audio-to-video workflows, send require_video_readiness=true to fail before reserving upload quota when video credits or active slots are blocked; active-slot blockers and retryable transient failures include Retry-After and X-Puppetry-Next-Poll-At so agents can pace the next reservation attempt. Idempotent replays of an existing pending upload still return a fresh signed URL. Requires the uploads:create scope.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "uploads",
+                "audio-url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                "key": "Idempotency-Key",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "bdd5b0de-0b51-497a-87a8-046c11e126e3",
+              "name": "Signed upload and read URLs",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Requests allowed in the current one-minute window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "10"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current one-minute window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp, in seconds, when the current rate-limit window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "1778520000"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"string\",\n  \"id\": \"apiupl_2f4f3f1b2e9e4f63a20a0b548d4b7a8c\",\n  \"upload_url\": \"http://RXdZBlLxtWqcnYRcRAtoeRTjym.tpzHNS4NqNYV1\",\n  \"uploadUrl\": \"https://UfbQBkdc.hritU.sePE.vBbvBG5.umwCQYM\",\n  \"method\": \"string\",\n  \"headers\": {\n    \"Content-Type\": \"audio/mpeg\",\n    \"Content-Length\": \"1048576\"\n  },\n  \"key\": \"string\",\n  \"read_url\": \"http://mCdyeVQlNsECi.rnqzLQ3Ez9MnWjeeluwOE9oUKLQHPnht7xo1ZhqLc4mbvsDARScUsWIfHfb98lb\",\n  \"readUrl\": \"https://FqbAAoXghbtGma.mitp\",\n  \"read_url_expires_in\": 86400,\n  \"readUrlExpiresIn\": 86400,\n  \"read_url_expires_at\": \"1993-10-03T04:22:49.694Z\",\n  \"readUrlExpiresAt\": \"1996-05-14T18:11:09.401Z\",\n  \"upload_url_expires_in\": 3600,\n  \"uploadUrlExpiresIn\": 3600,\n  \"limits\": {\n    \"max_file_bytes\": 52428800,\n    \"maxFileBytes\": 52428800,\n    \"monthly_uploads\": 250,\n    \"monthlyUploads\": 250,\n    \"storage_bytes\": 2147483648,\n    \"storageBytes\": 2147483648,\n    \"remaining_monthly_uploads\": 249,\n    \"remainingMonthlyUploads\": 249,\n    \"remaining_storage_bytes\": 2146435072,\n    \"remainingStorageBytes\": 2146435072\n  },\n  \"idempotent_replay\": false,\n  \"idempotentReplay\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "64c05eb7-2a34-4ad9-8b84-7a045a6763b3",
+              "name": "Invalid request body or unsupported input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"hosted_audio_upload_unavailable\",\n  \"message\": \"Hosted audio upload ownership is temporarily unavailable\",\n  \"details\": {\n    \"retry_after_seconds\": 217,\n    \"retryAfter\": 217,\n    \"retryAfterSeconds\": 217\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "36ea7bb6-e8e9-457c-9ae6-2defa6bc2f6f",
+              "name": "Missing, malformed, invalid, or revoked API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"message\": \"Missing or invalid Authorization header. Use: Bearer pk_live_...\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "83ce69c3-a45b-4e52-a55d-7ead566e5c42",
+              "name": "The account does not have enough video credits to create the job.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"insufficient_credits\",\n  \"message\": \"Not enough video credits to create a video job\",\n  \"details\": {\n    \"code\": \"insufficient_video_credits\",\n    \"reason\": \"insufficient_video_credits\",\n    \"required_credits\": 1,\n    \"requiredCredits\": 1,\n    \"remaining_credits\": 0,\n    \"remainingCredits\": 0,\n    \"retryable\": false,\n    \"retry_blocked_reason\": \"Developer API video generation needs 1 credit, but only 0 remain.\",\n    \"retryBlockedReason\": \"Developer API video generation needs 1 credit, but only 0 remain.\",\n    \"retry_block_code\": \"INSUFFICIENT_VIDEO_CREDITS\",\n    \"retryBlockCode\": \"INSUFFICIENT_VIDEO_CREDITS\",\n    \"checkout_url\": \"https://www.puppetry.com/pricing#pricing-credit-packs\",\n    \"checkoutUrl\": \"https://www.puppetry.com/pricing#pricing-credit-packs\",\n    \"top_up\": \"Buy 5 video credits for $4.99 at https://www.puppetry.com/pricing#pricing-credit-packs\",\n    \"topUp\": \"Buy 5 video credits for $4.99 at https://www.puppetry.com/pricing#pricing-credit-packs\",\n    \"video_generation\": {\n      \"can_create\": false,\n      \"canCreate\": false,\n      \"required_credits\": 1,\n      \"requiredCredits\": 1,\n      \"credits_remaining\": 0,\n      \"creditsRemaining\": 0,\n      \"concurrent_jobs\": 2,\n      \"concurrentJobs\": 2,\n      \"active_jobs\": 0,\n      \"activeJobs\": 0,\n      \"available_slots\": 2,\n      \"availableSlots\": 2,\n      \"reason\": \"insufficient_video_credits\"\n    },\n    \"videoGeneration\": {\n      \"can_create\": false,\n      \"canCreate\": false,\n      \"required_credits\": 1,\n      \"requiredCredits\": 1,\n      \"credits_remaining\": 0,\n      \"creditsRemaining\": 0,\n      \"concurrent_jobs\": 2,\n      \"concurrentJobs\": 2,\n      \"active_jobs\": 0,\n      \"activeJobs\": 0,\n      \"available_slots\": 2,\n      \"availableSlots\": 2,\n      \"reason\": \"insufficient_video_credits\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "424995a1-0b4e-4368-9471-66ceb45a9671",
+              "name": "The API key does not include the required endpoint scope.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"forbidden\",\n  \"message\": \"This API key does not have the required scope\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ebfd76f0-e145-402f-8f71-a67b8f3cd5bd",
+              "name": "Idempotency-Key replay is in progress or conflicts with existing upload metadata.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "disabled": false,
+                  "description": "Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.",
+                  "key": "X-Puppetry-Next-Poll-At",
+                  "value": "2026-06-22T08:50:30.000Z"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"idempotency_key_in_progress\",\n  \"message\": \"An upload URL with this Idempotency-Key is already being created. Retry this request shortly.\",\n  \"retryable\": true,\n  \"retry_after_seconds\": 5,\n  \"retryAfter\": 5,\n  \"retryAfterSeconds\": 5,\n  \"next_poll_at\": \"2026-06-22T08:50:05.000Z\",\n  \"nextPollAt\": \"2026-06-22T08:50:05.000Z\",\n  \"details\": {\n    \"retryable\": true,\n    \"retry_after_seconds\": 5,\n    \"retryAfter\": 5,\n    \"retryAfterSeconds\": 5,\n    \"next_poll_at\": \"2026-06-22T08:50:05.000Z\",\n    \"nextPollAt\": \"2026-06-22T08:50:05.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a1d28b7-5fa7-40ea-9f4d-029a7ab3be04",
+              "name": "Request body or audio file exceeds the upload limits",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Request Entity Too Large",
+              "code": 413,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"payload_too_large\",\n  \"message\": \"Request body must be 8192 bytes or fewer\",\n  \"details\": {\n    \"max_body_bytes\": 8192,\n    \"retryable\": false,\n    \"retry_blocked_reason\": \"Request body must be 8192 bytes or fewer\",\n    \"retryBlockedReason\": \"Request body must be 8192 bytes or fewer\",\n    \"retry_block_code\": \"AUDIO_UPLOAD_PAYLOAD_TOO_LARGE\",\n    \"retryBlockCode\": \"AUDIO_UPLOAD_PAYLOAD_TOO_LARGE\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8c49a0f8-3571-4e93-880f-b4d56a39e0d8",
+              "name": "Request Content-Type must be application/json",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unsupported Media Type",
+              "code": 415,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unsupported_media_type\",\n  \"message\": \"Content-Type must be application/json\",\n  \"details\": {\n    \"retryable\": false,\n    \"retry_blocked_reason\": \"Content-Type must be application/json\",\n    \"retryBlockedReason\": \"Content-Type must be application/json\",\n    \"retry_block_code\": \"UNSUPPORTED_AUDIO_UPLOAD_MEDIA_TYPE\",\n    \"retryBlockCode\": \"UNSUPPORTED_AUDIO_UPLOAD_MEDIA_TYPE\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "989e548e-8a91-4739-9975-ac48d6277ff1",
+              "name": "Video generation active slots are full, or the Developer API rate limit was exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Requests allowed in the current one-minute window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "10"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current one-minute window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp, in seconds, when the current rate-limit window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "1778520000"
+                },
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "disabled": false,
+                  "description": "Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.",
+                  "key": "X-Puppetry-Next-Poll-At",
+                  "value": "2026-06-22T08:50:30.000Z"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"concurrent_job_limit_reached\",\n  \"message\": \"Developer API video generation is at its active job limit. Retry after the active job slot expires.\",\n  \"retryable\": true,\n  \"retry_after_seconds\": 512,\n  \"retryAfter\": 512,\n  \"retryAfterSeconds\": 512,\n  \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n  \"nextPollAt\": \"2026-06-22T08:50:30.000Z\",\n  \"details\": {\n    \"retryable\": true,\n    \"code\": \"concurrent_job_limit_reached\",\n    \"reason\": \"concurrent_job_limit_reached\",\n    \"video_generation\": {\n      \"can_create\": false,\n      \"canCreate\": false,\n      \"reason\": \"concurrent_job_limit_reached\",\n      \"active_jobs\": 2,\n      \"activeJobs\": 2,\n      \"available_slots\": 0,\n      \"availableSlots\": 0,\n      \"retry_after_seconds\": 512,\n      \"retryAfter\": 512,\n      \"retryAfterSeconds\": 512,\n      \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n      \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n    },\n    \"videoGeneration\": {\n      \"can_create\": false,\n      \"canCreate\": false,\n      \"reason\": \"concurrent_job_limit_reached\",\n      \"active_jobs\": 2,\n      \"activeJobs\": 2,\n      \"available_slots\": 0,\n      \"availableSlots\": 0,\n      \"retry_after_seconds\": 512,\n      \"retryAfter\": 512,\n      \"retryAfterSeconds\": 512,\n      \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n      \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0e6bfe2b-5742-4826-8c7a-1ba5dccaf0b4",
+              "name": "Puppetry could not create or inspect the requested asset.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "disabled": false,
+                  "description": "Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.",
+                  "key": "X-Puppetry-Next-Poll-At",
+                  "value": "2026-06-22T08:50:30.000Z"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"video_queue_failed\",\n  \"message\": \"Animation service did not return a video job id\",\n  \"details\": {\n    \"retryable\": true,\n    \"retry_after_seconds\": 30,\n    \"retryAfter\": 30,\n    \"retryAfterSeconds\": 30,\n    \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n    \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "68250418-e4a5-4542-933d-9f8b63c47576",
+              "name": "A beta quota, usage lookup, or job counter is temporarily unavailable.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "uploads",
+                    "audio-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Optional non-blank retry key for video create and hosted audio upload URL requests. Keys are scoped to the authenticated user, org, API key, endpoint, trimmed Idempotency-Key value, and normalized request payload. Replaying the same accepted video create request returns without charging another credit; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.",
+                    "key": "Idempotency-Key",
+                    "value": "text-video-demo-1"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"contentType\": \"audio/mpeg\",\n  \"contentLength\": 1048576,\n  \"idempotencyKey\": \"upload-demo-1\",\n  \"requireVideoReadiness\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "disabled": false,
+                  "description": "Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.",
+                  "key": "X-Puppetry-Next-Poll-At",
+                  "value": "2026-06-22T08:50:30.000Z"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"api_auth_unavailable\",\n  \"message\": \"Developer API authentication is temporarily unavailable\",\n  \"retryable\": true,\n  \"retry_after_seconds\": 30,\n  \"retryAfter\": 30,\n  \"retryAfterSeconds\": 30,\n  \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n  \"nextPollAt\": \"2026-06-22T08:50:30.000Z\",\n  \"details\": {\n    \"retryable\": true,\n    \"retry_after_seconds\": 30,\n    \"retryAfter\": 30,\n    \"retryAfterSeconds\": 30,\n    \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n    \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://www.puppetry.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "17adb9c4-6f7e-410b-ad4d-d1e716ea77ac",
+    "name": "Puppetry Developer API Beta Audio Uploads API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Live Puppetry Developer API beta for Puppetry Voice API access, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.\n\nContact Support:\n Name: Puppetry Support\n Email: support@puppetry.com",
+      "type": "text/plain"
+    }
+  }
+}

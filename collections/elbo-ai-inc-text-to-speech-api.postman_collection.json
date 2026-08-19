@@ -1,0 +1,598 @@
+{
+  "item": [
+    {
+      "id": "8c182d06-c824-4784-bb27-e58c76074269",
+      "name": "Text to Speech",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "711dc3a7-0bb9-49a0-9c47-3f05ffd0a64b",
+          "name": "Generate speech with a Puppetry voice",
+          "request": {
+            "name": "Generate speech with a Puppetry voice",
+            "description": {
+              "content": "Creates a hosted WAV audio file from text using a public Puppetry voice. Requires the tts:create scope.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tts",
+                "puppetry"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"voice_id\": \"<string>\",\n  \"text\": \"<string>\",\n  \"speed\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "415497c5-50d9-46c8-ab82-5a97b97b606b",
+              "name": "Generated audio",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tts",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voice_id\": \"puppetry-af_bella\",\n  \"text\": \"Hello from Puppetry.\",\n  \"speed\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Requests allowed in the current one-minute window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "10"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current one-minute window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp, in seconds, when the current rate-limit window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "1778520000"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"string\",\n  \"id\": \"string\",\n  \"voice_id\": \"puppetry-af_bella\",\n  \"audio_url\": \"https://nLdO.fju+KT9pHxK1DG.cc+ne-qBS4UZOzG.MQ+n7\",\n  \"format\": \"string\",\n  \"usage\": {\n    \"voice_characters\": {\n      \"used\": 20,\n      \"limit\": 100000,\n      \"remaining\": 99980\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9c685543-52a9-43ca-9910-a6d30795c486",
+              "name": "Invalid request body or unsupported input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tts",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voice_id\": \"puppetry-af_bella\",\n  \"text\": \"Hello from Puppetry.\",\n  \"speed\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"hosted_audio_upload_unavailable\",\n  \"message\": \"Hosted audio upload ownership is temporarily unavailable\",\n  \"details\": {\n    \"retry_after_seconds\": 217,\n    \"retryAfter\": 217,\n    \"retryAfterSeconds\": 217\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9420572c-848c-4c00-bc5e-8afe83d50dff",
+              "name": "Missing, malformed, invalid, or revoked API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tts",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voice_id\": \"puppetry-af_bella\",\n  \"text\": \"Hello from Puppetry.\",\n  \"speed\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"unauthorized\",\n  \"message\": \"Missing or invalid Authorization header. Use: Bearer pk_live_...\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d78f7601-527e-479c-8341-f5739a4726b4",
+              "name": "The API key does not include the required endpoint scope.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tts",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voice_id\": \"puppetry-af_bella\",\n  \"text\": \"Hello from Puppetry.\",\n  \"speed\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"forbidden\",\n  \"message\": \"This API key does not have the required scope\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "15e22335-c7c1-4752-b4c0-f3d43a6db2cc",
+              "name": "Unknown Puppetry voice",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tts",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voice_id\": \"puppetry-af_bella\",\n  \"text\": \"Hello from Puppetry.\",\n  \"speed\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"voice_not_found\",\n  \"message\": \"Unknown Puppetry voice\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "50e224a6-517f-4e30-9534-3aa68e8fd47f",
+              "name": "Rate limit or monthly beta quota exceeded",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tts",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voice_id\": \"puppetry-af_bella\",\n  \"text\": \"Hello from Puppetry.\",\n  \"speed\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Requests allowed in the current one-minute window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "10"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current one-minute window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "9"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp, in seconds, when the current rate-limit window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "1778520000"
+                },
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"rate_limited\",\n  \"message\": \"Developer API beta limit exceeded: 10 requests per minute.\",\n  \"retryable\": true,\n  \"retry_after_seconds\": 30,\n  \"retryAfter\": 30,\n  \"retryAfterSeconds\": 30,\n  \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n  \"nextPollAt\": \"2026-06-22T08:50:30.000Z\",\n  \"details\": {\n    \"retryable\": true,\n    \"retry_after_seconds\": 30,\n    \"retryAfter\": 30,\n    \"retryAfterSeconds\": 30,\n    \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n    \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3b4b2273-b6b9-4c04-879d-b4ee0a27d466",
+              "name": "Puppetry could not create or inspect the requested asset.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tts",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voice_id\": \"puppetry-af_bella\",\n  \"text\": \"Hello from Puppetry.\",\n  \"speed\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "disabled": false,
+                  "description": "Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.",
+                  "key": "X-Puppetry-Next-Poll-At",
+                  "value": "2026-06-22T08:50:30.000Z"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"video_queue_failed\",\n  \"message\": \"Animation service did not return a video job id\",\n  \"details\": {\n    \"retryable\": true,\n    \"retry_after_seconds\": 30,\n    \"retryAfter\": 30,\n    \"retryAfterSeconds\": 30,\n    \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n    \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d6b8e087-bbc4-412e-a7a7-cd8b77e1155e",
+              "name": "A beta quota, usage lookup, or job counter is temporarily unavailable.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tts",
+                    "puppetry"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"voice_id\": \"puppetry-af_bella\",\n  \"text\": \"Hello from Puppetry.\",\n  \"speed\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.",
+                  "key": "Retry-After",
+                  "value": "30"
+                },
+                {
+                  "disabled": false,
+                  "description": "Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.",
+                  "key": "X-Puppetry-Next-Poll-At",
+                  "value": "2026-06-22T08:50:30.000Z"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"api_auth_unavailable\",\n  \"message\": \"Developer API authentication is temporarily unavailable\",\n  \"retryable\": true,\n  \"retry_after_seconds\": 30,\n  \"retryAfter\": 30,\n  \"retryAfterSeconds\": 30,\n  \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n  \"nextPollAt\": \"2026-06-22T08:50:30.000Z\",\n  \"details\": {\n    \"retryable\": true,\n    \"retry_after_seconds\": 30,\n    \"retryAfter\": 30,\n    \"retryAfterSeconds\": 30,\n    \"next_poll_at\": \"2026-06-22T08:50:30.000Z\",\n    \"nextPollAt\": \"2026-06-22T08:50:30.000Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://www.puppetry.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d5e03ffb-2e83-4044-b64e-2038337db2f3",
+    "name": "Puppetry Developer API Beta Audio Uploads Text to Speech API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Live Puppetry Developer API beta for Puppetry Voice API access, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.\n\nContact Support:\n Name: Puppetry Support\n Email: support@puppetry.com",
+      "type": "text/plain"
+    }
+  }
+}

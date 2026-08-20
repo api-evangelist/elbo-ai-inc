@@ -39,6 +39,17 @@ tags:
 - Company
 - Artificial Intelligence
 - Video
+- Text-to-Speech
+- Voice
+- Generative AI
+- Avatars
+- Content Creation
+- Developer API
+- MCP
+tags_raw:
+- Company
+- Artificial Intelligence
+- Video
 - Text to Speech
 - Voice
 - Generative AI
@@ -72,6 +83,8 @@ apis:
   humanURL: https://www.puppetry.com/developer
   baseURL: https://www.puppetry.com/api/v1
   tags:
+  - Text-to-Speech
+  tags_raw:
   - Text to Speech
   properties:
   - type: OpenAPI

@@ -51,7 +51,7 @@ tags:
 - Company
 - Artificial Intelligence
 - Video
-- Text-to-Speech
+- Text to Speech
 - Voice
 - Generative AI
 - Avatars
@@ -95,7 +95,7 @@ apis:
   humanURL: https://www.puppetry.com/developer
   baseURL: https://www.puppetry.com/api/v1
   tags:
-  - Text-to-Speech
+  - Text to Speech
   tags_raw:
   - Text to Speech
   properties:

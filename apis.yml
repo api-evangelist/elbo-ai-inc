@@ -126,6 +126,8 @@ apis:
   humanURL: https://www.puppetry.com/developer
   baseURL: https://www.puppetry.com/api/v1
   tags:
+  - Video
+  tags_raw:
   - Videos
   properties:
   - type: OpenAPI
@@ -140,6 +142,8 @@ apis:
   humanURL: https://www.puppetry.com/developer
   baseURL: https://www.puppetry.com/api/v1
   tags:
+  - Voice
+  tags_raw:
   - Voices
   properties:
   - type: OpenAPI

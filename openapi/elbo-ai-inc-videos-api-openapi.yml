@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Puppetry Developer API Beta Audio Uploads Videos API
+  title: Puppetry Developer API Beta Videos API
   description: Live Puppetry Developer API beta for Puppetry Voice API access, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.
   version: '2026-05-11'
   contact:
@@ -424,7 +424,1128 @@ paths:
         '504':
           $ref: '#/components/responses/VideoJobStatusTimeout'
 components:
+  responses:
+    IdempotencyConflict:
+      description: The Idempotency-Key is already creating a video job or hosted upload URL, or it was reused with different input. Video create conflicts include Location/Content-Location, Puppetry-Operation-Id, and Puppetry-Request-Id headers for the existing API video job when one is known.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+        X-Puppetry-Next-Poll-At:
+          $ref: '#/components/headers/NextPollAt'
+        Location:
+          $ref: '#/components/headers/VideoJobStatusLocation'
+        Content-Location:
+          $ref: '#/components/headers/VideoJobStatusLocation'
+        Puppetry-Operation-Id:
+          $ref: '#/components/headers/VideoJobOperationId'
+        X-Puppetry-Operation-Id:
+          $ref: '#/components/headers/VideoJobOperationId'
+        Puppetry-Request-Id:
+          $ref: '#/components/headers/VideoJobRequestId'
+        X-Puppetry-Request-Id:
+          $ref: '#/components/headers/VideoJobRequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            idempotencyInProgress:
+              value:
+                error: idempotency_key_in_progress
+                message: A video job or upload URL with this Idempotency-Key is already being created. Retry this request shortly.
+                details:
+                  retryable: true
+                  retry_after_seconds: 5
+                  retryAfter: 5
+                  retryAfterSeconds: 5
+                  next_poll_at: '2026-06-22T08:50:05.000Z'
+                  nextPollAt: '2026-06-22T08:50:05.000Z'
+            idempotencyKeyConflict:
+              value:
+                error: idempotency_key_conflict
+                message: Idempotency-Key was already used with a different video create request
+                object: video_job
+                id: api_video_existing
+                job_id: api_video_existing
+                jobId: api_video_existing
+                operation_id: api_video_existing
+                operationId: api_video_existing
+                request_id: api_video_existing
+                requestId: api_video_existing
+                source: text
+                request_source: text
+                requestSource: text
+                status_url: /api/v1/videos/api_video_existing
+                statusUrl: /api/v1/videos/api_video_existing
+                content_location: /api/v1/videos/api_video_existing
+                contentLocation: /api/v1/videos/api_video_existing
+                details:
+                  retryable: false
+                  retry_blocked_reason: Idempotency-Key was already used with a different video create request
+                  retryBlockedReason: Idempotency-Key was already used with a different video create request
+                  retry_block_code: IDEMPOTENCY_KEY_CONFLICT
+                  retryBlockCode: IDEMPOTENCY_KEY_CONFLICT
+                  object: video_job
+                  id: api_video_existing
+                  status_url: /api/v1/videos/api_video_existing
+                  statusUrl: /api/v1/videos/api_video_existing
+                  content_location: /api/v1/videos/api_video_existing
+                  contentLocation: /api/v1/videos/api_video_existing
+    VideoJobStatusUnavailable:
+      description: Puppetry could not inspect an accepted video job. Retry-After, X-Puppetry-Next-Poll-At, Location, Content-Location, Puppetry-Operation-Id, and Puppetry-Request-Id identify and pace the same status poll target.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+        X-Puppetry-Next-Poll-At:
+          $ref: '#/components/headers/NextPollAt'
+        Location:
+          $ref: '#/components/headers/VideoJobStatusLocation'
+        Content-Location:
+          $ref: '#/components/headers/VideoJobStatusLocation'
+        Puppetry-Operation-Id:
+          $ref: '#/components/headers/VideoJobOperationId'
+        X-Puppetry-Operation-Id:
+          $ref: '#/components/headers/VideoJobOperationId'
+        Puppetry-Request-Id:
+          $ref: '#/components/headers/VideoJobRequestId'
+        X-Puppetry-Request-Id:
+          $ref: '#/components/headers/VideoJobRequestId'
+        X-Puppetry-Credits-Required:
+          $ref: '#/components/headers/VideoJobCreditsRequired'
+        X-Puppetry-Credits-Remaining:
+          $ref: '#/components/headers/VideoJobCreditsRemaining'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            jobStatusUnavailable:
+              value:
+                error: job_status_unavailable
+                message: Video job status is temporarily unavailable
+                retryable: true
+                retry_after_seconds: 10
+                retryAfter: 10
+                retryAfterSeconds: 10
+                next_poll_at: '2026-06-22T08:50:10.000Z'
+                nextPollAt: '2026-06-22T08:50:10.000Z'
+                credits:
+                  charged: 0
+                  remaining: null
+                creation_credits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                creationCredits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                details:
+                  retryable: true
+                  retry_after_seconds: 10
+                  retryAfter: 10
+                  retryAfterSeconds: 10
+                  next_poll_at: '2026-06-22T08:50:10.000Z'
+                  nextPollAt: '2026-06-22T08:50:10.000Z'
+                  object: video_job
+                  id: api_video_abc123
+                  job_id: api_video_abc123
+                  jobId: api_video_abc123
+                  task_id: api_video_abc123
+                  taskId: api_video_abc123
+                  status_url: /api/v1/videos/api_video_abc123
+                  statusUrl: /api/v1/videos/api_video_abc123
+                  credits:
+                    charged: 0
+                    remaining: null
+                  creation_credits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  creationCredits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  created_at: '2026-06-22T08:50:00.000Z'
+                  createdAt: '2026-06-22T08:50:00.000Z'
+                  content_location: /api/v1/videos/api_video_abc123
+                  contentLocation: /api/v1/videos/api_video_abc123
+            jobResultUnavailable:
+              value:
+                error: job_result_unavailable
+                message: Video job result is temporarily unavailable
+                retryable: true
+                retry_after_seconds: 10
+                retryAfter: 10
+                retryAfterSeconds: 10
+                next_poll_at: '2026-06-22T08:50:10.000Z'
+                nextPollAt: '2026-06-22T08:50:10.000Z'
+                credits:
+                  charged: 0
+                  remaining: null
+                creation_credits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                creationCredits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                details:
+                  retryable: true
+                  retry_after_seconds: 10
+                  retryAfter: 10
+                  retryAfterSeconds: 10
+                  next_poll_at: '2026-06-22T08:50:10.000Z'
+                  nextPollAt: '2026-06-22T08:50:10.000Z'
+                  object: video_job
+                  id: api_video_abc123
+                  job_id: api_video_abc123
+                  jobId: api_video_abc123
+                  task_id: api_video_abc123
+                  taskId: api_video_abc123
+                  status_url: /api/v1/videos/api_video_abc123
+                  statusUrl: /api/v1/videos/api_video_abc123
+                  credits:
+                    charged: 0
+                    remaining: null
+                  creation_credits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  creationCredits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  created_at: '2026-06-22T08:50:00.000Z'
+                  createdAt: '2026-06-22T08:50:00.000Z'
+                  content_location: /api/v1/videos/api_video_abc123
+                  contentLocation: /api/v1/videos/api_video_abc123
+    RateLimited:
+      description: Rate limit or monthly beta quota exceeded
+      headers:
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            rateLimited:
+              value:
+                error: rate_limited
+                message: 'Developer API beta limit exceeded: 10 requests per minute.'
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+            voiceCharacterLimit:
+              value:
+                error: voice_character_limit_exceeded
+                message: Monthly Puppetry Voice character limit exceeded
+                details:
+                  retryable: true
+                  retry_after_seconds: 86400
+                  retryAfter: 86400
+                  retryAfterSeconds: 86400
+            concurrentVideoJobLimit:
+              value:
+                error: concurrent_job_limit_exceeded
+                message: Developer API concurrent job limit exceeded
+                details:
+                  retryable: true
+                  concurrent_jobs: 2
+                  concurrentJobs: 2
+                  active_jobs: 2
+                  activeJobs: 2
+                  available_slots: 0
+                  availableSlots: 0
+                  active_job_expires_in_seconds: 512
+                  activeJobExpiresInSeconds: 512
+                  retry_after_seconds: 512
+                  retryAfter: 512
+                  retryAfterSeconds: 512
+    InvalidRequest:
+      description: Invalid request body or unsupported input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            hostedAudioUploadUnavailable:
+              value:
+                error: hosted_audio_upload_unavailable
+                message: Hosted audio upload ownership is temporarily unavailable
+                details:
+                  retry_after_seconds: 217
+                  retryAfter: 217
+                  retryAfterSeconds: 217
+            hostedAudioUploadNotFound:
+              value:
+                error: invalid_request
+                message: audio_url must reference a hosted API audio upload owned by this API key
+                details:
+                  retryable: false
+                  retry_blocked_reason: audio_url must reference a hosted API audio upload owned by this API key
+                  retryBlockedReason: audio_url must reference a hosted API audio upload owned by this API key
+                  retry_block_code: HOSTED_AUDIO_UPLOAD_NOT_FOUND
+                  retryBlockCode: HOSTED_AUDIO_UPLOAD_NOT_FOUND
+            hostedAudioUploadPending:
+              value:
+                error: invalid_request
+                message: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                details:
+                  retryable: false
+                  retry_blocked_reason: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                  retryBlockedReason: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                  retry_block_code: HOSTED_AUDIO_UPLOAD_PENDING
+                  retryBlockCode: HOSTED_AUDIO_UPLOAD_PENDING
+            invalidImage:
+              value:
+                error: invalid_image
+                message: image_url must be a supported image
+                details:
+                  retryable: false
+                  retry_blocked_reason: image_url must be a supported image
+                  retryBlockedReason: image_url must be a supported image
+                  retry_block_code: INVALID_VIDEO_IMAGE
+                  retryBlockCode: INVALID_VIDEO_IMAGE
+            audioTooLong:
+              value:
+                error: audio_too_long
+                message: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                details:
+                  duration_seconds: 529.42
+                  max_duration_seconds: 300
+                  retryable: false
+                  retry_blocked_reason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                  retryBlockedReason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                  retry_block_code: VIDEO_CREATE_AUDIO_TOO_LONG
+                  retryBlockCode: VIDEO_CREATE_AUDIO_TOO_LONG
+    Forbidden:
+      description: The API key does not include the required endpoint scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            forbidden:
+              value:
+                error: forbidden
+                message: This API key does not have the required scope
+    VideoJobStatusTimeout:
+      description: Puppetry timed out while checking an accepted video job. Retry-After, X-Puppetry-Next-Poll-At, Location, Content-Location, Puppetry-Operation-Id, and Puppetry-Request-Id identify and pace the same status poll target.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+        X-Puppetry-Next-Poll-At:
+          $ref: '#/components/headers/NextPollAt'
+        Location:
+          $ref: '#/components/headers/VideoJobStatusLocation'
+        Content-Location:
+          $ref: '#/components/headers/VideoJobStatusLocation'
+        Puppetry-Operation-Id:
+          $ref: '#/components/headers/VideoJobOperationId'
+        X-Puppetry-Operation-Id:
+          $ref: '#/components/headers/VideoJobOperationId'
+        Puppetry-Request-Id:
+          $ref: '#/components/headers/VideoJobRequestId'
+        X-Puppetry-Request-Id:
+          $ref: '#/components/headers/VideoJobRequestId'
+        X-Puppetry-Credits-Required:
+          $ref: '#/components/headers/VideoJobCreditsRequired'
+        X-Puppetry-Credits-Remaining:
+          $ref: '#/components/headers/VideoJobCreditsRemaining'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            statusTimeout:
+              value:
+                error: job_status_timeout
+                message: Video job status lookup timed out
+                retryable: true
+                retry_after_seconds: 10
+                retryAfter: 10
+                retryAfterSeconds: 10
+                next_poll_at: '2026-06-22T08:50:10.000Z'
+                nextPollAt: '2026-06-22T08:50:10.000Z'
+                credits:
+                  charged: 0
+                  remaining: null
+                creation_credits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                creationCredits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                details:
+                  retryable: true
+                  retry_after_seconds: 10
+                  retryAfter: 10
+                  retryAfterSeconds: 10
+                  next_poll_at: '2026-06-22T08:50:10.000Z'
+                  nextPollAt: '2026-06-22T08:50:10.000Z'
+                  object: video_job
+                  id: api_video_abc123
+                  job_id: api_video_abc123
+                  jobId: api_video_abc123
+                  task_id: api_video_abc123
+                  taskId: api_video_abc123
+                  status_url: /api/v1/videos/api_video_abc123
+                  statusUrl: /api/v1/videos/api_video_abc123
+                  credits:
+                    charged: 0
+                    remaining: null
+                  creation_credits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  creationCredits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  created_at: '2026-06-22T08:50:00.000Z'
+                  createdAt: '2026-06-22T08:50:00.000Z'
+                  content_location: /api/v1/videos/api_video_abc123
+                  contentLocation: /api/v1/videos/api_video_abc123
+    UnsupportedMediaType:
+      description: The request body media type is not supported.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unsupportedMediaType:
+              value:
+                error: unsupported_media_type
+                message: Content-Type must be application/json
+    InsufficientCredits:
+      description: The account does not have enough video credits to create the job.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            insufficientCredits:
+              value:
+                error: insufficient_credits
+                message: Not enough video credits to create a video job
+                details:
+                  code: insufficient_video_credits
+                  reason: insufficient_video_credits
+                  required_credits: 1
+                  requiredCredits: 1
+                  remaining_credits: 0
+                  remainingCredits: 0
+                  retryable: false
+                  retry_blocked_reason: Developer API video generation needs 1 credit, but only 0 remain.
+                  retryBlockedReason: Developer API video generation needs 1 credit, but only 0 remain.
+                  retry_block_code: INSUFFICIENT_VIDEO_CREDITS
+                  retryBlockCode: INSUFFICIENT_VIDEO_CREDITS
+                  checkout_url: https://www.puppetry.com/pricing#pricing-credit-packs
+                  checkoutUrl: https://www.puppetry.com/pricing#pricing-credit-packs
+                  top_up: Buy 5 video credits for $4.99 at https://www.puppetry.com/pricing#pricing-credit-packs
+                  topUp: Buy 5 video credits for $4.99 at https://www.puppetry.com/pricing#pricing-credit-packs
+                  video_generation:
+                    can_create: false
+                    canCreate: false
+                    required_credits: 1
+                    requiredCredits: 1
+                    credits_remaining: 0
+                    creditsRemaining: 0
+                    concurrent_jobs: 2
+                    concurrentJobs: 2
+                    active_jobs: 0
+                    activeJobs: 0
+                    available_slots: 2
+                    availableSlots: 2
+                    reason: insufficient_video_credits
+                  videoGeneration:
+                    can_create: false
+                    canCreate: false
+                    required_credits: 1
+                    requiredCredits: 1
+                    credits_remaining: 0
+                    creditsRemaining: 0
+                    concurrent_jobs: 2
+                    concurrentJobs: 2
+                    active_jobs: 0
+                    activeJobs: 0
+                    available_slots: 2
+                    availableSlots: 2
+                    reason: insufficient_video_credits
+    UpstreamFailure:
+      description: Puppetry could not create or inspect the requested asset.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+        X-Puppetry-Next-Poll-At:
+          $ref: '#/components/headers/NextPollAt'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            videoQueueFailed:
+              value:
+                error: video_queue_failed
+                message: Animation service did not return a video job id
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+            creditDebitUnavailable:
+              value:
+                error: credit_debit_unavailable
+                message: Video credit debit is temporarily unavailable
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+            assetProbeUnavailable:
+              value:
+                error: asset_probe_unavailable
+                message: audio_url is temporarily unavailable for inspection
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+            jobStatusUnavailable:
+              value:
+                error: job_status_unavailable
+                message: Video job status is temporarily unavailable
+                retryable: true
+                retry_after_seconds: 10
+                retryAfter: 10
+                retryAfterSeconds: 10
+                next_poll_at: '2026-06-22T08:50:10.000Z'
+                nextPollAt: '2026-06-22T08:50:10.000Z'
+                credits:
+                  charged: 0
+                  remaining: null
+                creation_credits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                creationCredits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                details:
+                  retryable: true
+                  retry_after_seconds: 10
+                  retryAfter: 10
+                  retryAfterSeconds: 10
+                  next_poll_at: '2026-06-22T08:50:10.000Z'
+                  nextPollAt: '2026-06-22T08:50:10.000Z'
+                  object: video_job
+                  id: api_video_abc123
+                  job_id: api_video_abc123
+                  jobId: api_video_abc123
+                  task_id: api_video_abc123
+                  taskId: api_video_abc123
+                  status_url: /api/v1/videos/api_video_abc123
+                  statusUrl: /api/v1/videos/api_video_abc123
+                  credits:
+                    charged: 0
+                    remaining: null
+                  creation_credits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  creationCredits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  created_at: '2026-06-22T08:50:00.000Z'
+                  createdAt: '2026-06-22T08:50:00.000Z'
+                  content_location: /api/v1/videos/api_video_abc123
+                  contentLocation: /api/v1/videos/api_video_abc123
+            jobResultUnavailable:
+              value:
+                error: job_result_unavailable
+                message: Video job result is temporarily unavailable
+                retryable: true
+                retry_after_seconds: 10
+                retryAfter: 10
+                retryAfterSeconds: 10
+                next_poll_at: '2026-06-22T08:50:10.000Z'
+                nextPollAt: '2026-06-22T08:50:10.000Z'
+                credits:
+                  charged: 0
+                  remaining: null
+                creation_credits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                creationCredits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                details:
+                  retryable: true
+                  retry_after_seconds: 10
+                  retryAfter: 10
+                  retryAfterSeconds: 10
+                  next_poll_at: '2026-06-22T08:50:10.000Z'
+                  nextPollAt: '2026-06-22T08:50:10.000Z'
+                  object: video_job
+                  id: api_video_abc123
+                  job_id: api_video_abc123
+                  jobId: api_video_abc123
+                  task_id: api_video_abc123
+                  taskId: api_video_abc123
+                  status_url: /api/v1/videos/api_video_abc123
+                  statusUrl: /api/v1/videos/api_video_abc123
+                  credits:
+                    charged: 0
+                    remaining: null
+                  creation_credits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  creationCredits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  created_at: '2026-06-22T08:50:00.000Z'
+                  createdAt: '2026-06-22T08:50:00.000Z'
+                  content_location: /api/v1/videos/api_video_abc123
+                  contentLocation: /api/v1/videos/api_video_abc123
+            jobFinalizationUnavailable:
+              value:
+                error: job_finalization_unavailable
+                message: Video job finalization is temporarily unavailable
+                retryable: true
+                retry_after_seconds: 10
+                retryAfter: 10
+                retryAfterSeconds: 10
+                next_poll_at: '2026-06-22T08:50:10.000Z'
+                nextPollAt: '2026-06-22T08:50:10.000Z'
+                credits:
+                  charged: 0
+                  remaining: null
+                creation_credits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                creationCredits:
+                  charged: 1
+                  remaining_after_debit: 299
+                  remainingAfterDebit: 299
+                details:
+                  retryable: true
+                  retry_after_seconds: 10
+                  retryAfter: 10
+                  retryAfterSeconds: 10
+                  next_poll_at: '2026-06-22T08:50:10.000Z'
+                  nextPollAt: '2026-06-22T08:50:10.000Z'
+                  object: video_job
+                  id: api_video_abc123
+                  job_id: api_video_abc123
+                  jobId: api_video_abc123
+                  task_id: api_video_abc123
+                  taskId: api_video_abc123
+                  status_url: /api/v1/videos/api_video_abc123
+                  statusUrl: /api/v1/videos/api_video_abc123
+                  credits:
+                    charged: 0
+                    remaining: null
+                  creation_credits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  creationCredits:
+                    charged: 1
+                    remaining_after_debit: 299
+                    remainingAfterDebit: 299
+                  created_at: '2026-06-22T08:50:00.000Z'
+                  createdAt: '2026-06-22T08:50:00.000Z'
+                  content_location: /api/v1/videos/api_video_abc123
+                  contentLocation: /api/v1/videos/api_video_abc123
+    Unauthorized:
+      description: Missing, malformed, invalid, or revoked API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unauthorized:
+              value:
+                error: unauthorized
+                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
+    TemporarilyUnavailable:
+      description: A beta quota, usage lookup, or job counter is temporarily unavailable.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+        X-Puppetry-Next-Poll-At:
+          $ref: '#/components/headers/NextPollAt'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            apiAuthUnavailable:
+              value:
+                error: api_auth_unavailable
+                message: Developer API authentication is temporarily unavailable
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
   schemas:
+    VideoJobCreationCredits:
+      type: object
+      required:
+      - charged
+      - remaining_after_debit
+      properties:
+        charged:
+          type: integer
+          minimum: 0
+          example: 1
+          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
+        remaining_after_debit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
+        remainingAfterDebit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: SDK-style alias for remaining_after_debit.
+      additionalProperties: false
+    VideoCredits:
+      type: object
+      required:
+      - charged
+      - remaining
+      properties:
+        charged:
+          type: integer
+          example: 1
+        remaining:
+          type: integer
+          nullable: true
+          example: 299
+      additionalProperties: false
+    AudioVideoRequest:
+      type: object
+      allOf:
+      - anyOf:
+        - required:
+          - image_url
+        - required:
+          - imageUrl
+        - required:
+          - image
+        - required:
+          - portrait
+        - required:
+          - portrait_url
+        - required:
+          - portraitUrl
+        - required:
+          - avatar
+        - required:
+          - avatarUrl
+        - required:
+          - avatar_url
+        - required:
+          - photo
+        - required:
+          - photoUrl
+        - required:
+          - photo_url
+      - anyOf:
+        - required:
+          - audio_url
+        - required:
+          - audioUrl
+        - required:
+          - audio
+      properties:
+        image_url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: HTTPS image URL for the portrait or puppet source.
+          example: https://example.com/portrait.png
+        imageUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: CamelCase alias for image_url.
+          example: https://example.com/portrait.png
+        image:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Agent-friendly alias for image_url.
+          example: https://example.com/portrait.png
+        portrait:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Portrait image alias for image_url.
+          example: https://example.com/portrait.png
+        portrait_url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Snake_case portrait alias for image_url.
+          example: https://example.com/portrait.png
+        portraitUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: CamelCase portrait alias for image_url.
+          example: https://example.com/portrait.png
+        avatar:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Avatar image alias for image_url.
+          example: https://example.com/portrait.png
+        avatarUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: CamelCase avatar alias for image_url.
+          example: https://example.com/portrait.png
+        avatar_url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Snake_case avatar alias for image_url.
+          example: https://example.com/portrait.png
+        photo:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Photo image alias for image_url.
+          example: https://example.com/portrait.png
+        photoUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: CamelCase photo alias for image_url.
+          example: https://example.com/portrait.png
+        photo_url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Snake_case photo alias for image_url.
+          example: https://example.com/portrait.png
+        audio_url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: HTTPS audio URL. Use /api/v1/uploads/audio-url when the audio is not already hosted; Puppetry-hosted API uploads must belong to the same API key that queues the video job. Rotated or expired signed read URL query params for the same hosted upload are treated as the same idempotent create input, and the stored key is re-signed before validation and queueing.
+          example: https://assets.puppetry.com/api-uploads/audio.mp3
+        audioUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: CamelCase alias for audio_url.
+          example: https://assets.puppetry.com/api-uploads/audio.mp3
+        audio:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Agent-friendly alias for audio_url.
+          example: https://assets.puppetry.com/api-uploads/audio.mp3
+        expressiveness:
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 1
+          description: LivePortrait expression scale for the generated talking-head motion.
+        idempotencyKey:
+          type: string
+          maxLength: 200
+          description: Optional request-body alias for the Idempotency-Key header. If both header and body aliases are provided, they must match.
+          example: audio-video-demo-1
+        idempotency_key:
+          type: string
+          maxLength: 200
+          description: Snake_case request-body alias for Idempotency-Key. If both body aliases are provided, they must match.
+          example: audio-video-demo-1
+      additionalProperties: false
+    VideoJobDiagnostics:
+      type: object
+      properties:
+        apiAudioUpload:
+          $ref: '#/components/schemas/ApiAudioUploadFallbackDiagnostics'
+        livePortrait:
+          $ref: '#/components/schemas/LivePortraitRecoveryDiagnostics'
+      additionalProperties: false
+    LivePortraitRecoveryDiagnostics:
+      type: object
+      required:
+      - source
+      - squareDrivingCropBypassAttempted
+      - squareDrivingCropBypassStage
+      properties:
+        source:
+          type: string
+          const: liveportrait
+        squareDrivingCropBypassAttempted:
+          type: boolean
+          const: true
+          description: True when Puppetry retried the LivePortrait render without square-driving crop after detecting the known failure mode.
+        squareDrivingCropBypassStage:
+          type: string
+          maxLength: 240
+          description: Redacted stage marker for the square-driving-crop bypass attempt. Signed URLs and trace secrets are never included.
+      additionalProperties: false
+    TextVideoRequest:
+      type: object
+      allOf:
+      - anyOf:
+        - required:
+          - image_url
+        - required:
+          - imageUrl
+        - required:
+          - image
+        - required:
+          - portrait
+        - required:
+          - portrait_url
+        - required:
+          - portraitUrl
+        - required:
+          - avatar
+        - required:
+          - avatarUrl
+        - required:
+          - avatar_url
+        - required:
+          - photo
+        - required:
+          - photoUrl
+        - required:
+          - photo_url
+      - anyOf:
+        - required:
+          - text
+        - required:
+          - script
+        - required:
+          - prompt
+      properties:
+        image_url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: HTTPS image URL for the portrait or puppet source.
+          example: https://example.com/portrait.png
+        imageUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: CamelCase alias for image_url.
+          example: https://example.com/portrait.png
+        image:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Agent-friendly alias for image_url.
+          example: https://example.com/portrait.png
+        portrait:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Portrait image alias for image_url.
+          example: https://example.com/portrait.png
+        portrait_url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Snake_case portrait alias for image_url.
+          example: https://example.com/portrait.png
+        portraitUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: CamelCase portrait alias for image_url.
+          example: https://example.com/portrait.png
+        avatar:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Avatar image alias for image_url.
+          example: https://example.com/portrait.png
+        avatarUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: CamelCase avatar alias for image_url.
+          example: https://example.com/portrait.png
+        avatar_url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Snake_case avatar alias for image_url.
+          example: https://example.com/portrait.png
+        photo:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Photo image alias for image_url.
+          example: https://example.com/portrait.png
+        photoUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: CamelCase photo alias for image_url.
+          example: https://example.com/portrait.png
+        photo_url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Snake_case photo alias for image_url.
+          example: https://example.com/portrait.png
+        text:
+          type: string
+          minLength: 1
+          maxLength: 10000
+          description: Script text to speak in the generated video.
+          example: Hello from the Puppetry video API.
+        script:
+          type: string
+          minLength: 1
+          maxLength: 10000
+          description: Agent-friendly alias for text.
+          example: Hello from the Puppetry video API.
+        prompt:
+          type: string
+          minLength: 1
+          maxLength: 10000
+          description: Agent-friendly alias for text.
+          example: Hello from the Puppetry video API.
+        voice_id:
+          type: string
+          description: Public Puppetry voice ID from GET /api/v1/voices/puppetry. Defaults to the Puppetry default voice.
+          example: puppetry-af_heart
+        voiceId:
+          type: string
+          description: CamelCase alias for voice_id.
+          example: puppetry-af_heart
+        voice:
+          type: string
+          description: Agent-friendly alias for voice_id.
+          example: puppetry-af_heart
+        language:
+          type: string
+          minLength: 2
+          maxLength: 16
+          default: en
+          example: en
+        expressiveness:
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 1
+          description: LivePortrait expression scale for the generated talking-head motion.
+        idempotencyKey:
+          type: string
+          maxLength: 200
+          description: Optional request-body alias for the Idempotency-Key header. If both header and body aliases are provided, they must match.
+          example: text-video-demo-1
+        idempotency_key:
+          type: string
+          maxLength: 200
+          description: Snake_case request-body alias for Idempotency-Key. If both body aliases are provided, they must match.
+          example: text-video-demo-1
+      additionalProperties: false
+    ApiAudioUploadFallbackDiagnostics:
+      type: object
+      required:
+      - source
+      - key
+      - recoveredFromS3
+      properties:
+        source:
+          type: string
+          const: api-audio-upload-s3-fallback
+        key:
+          type: string
+          description: Sanitized S3 key for the hosted audio object recovered by the worker.
+        recoveredFromS3:
+          type: boolean
+          description: True when the worker recovered the render by falling back from the signed read URL to the trusted hosted upload object.
+        reason:
+          type: string
+          description: Redacted worker fallback reason. Signed URL secrets are never included.
+        s3FallbackRetryCount:
+          type: integer
+          minimum: 1
+          description: Number of retryable hosted upload S3 fallback failures observed before the terminal fallback result.
+        s3FallbackLastRetryReason:
+          type: string
+          description: Redacted reason from the most recent retryable hosted upload S3 fallback failure.
+        expectedETag:
+          type: string
+          description: Queued hosted upload ETag used for worker fallback validation.
+        expectedMimeType:
+          type: string
+          enum:
+          - audio/wav
+          - audio/mpeg
+          - audio/mp4
+        expectedSizeBytes:
+          type: number
+          minimum: 0
+          description: Queued hosted upload byte length used for worker fallback validation.
+        readUrlExpiresAt:
+          type: string
+          format: date-time
+          description: Signed hosted audio read URL expiry known when the worker started.
+        readUrlExpiredAtFallback:
+          type: boolean
+          description: True when the signed hosted audio read URL had expired at the worker fallback time.
+      additionalProperties: false
     VideoJobQueuedResponse:
       type: object
       required:
@@ -892,30 +2013,6 @@ components:
           example: /api/v1/videos/api_video_8b1d2f4c6a7e9f0123456789
           description: SDK-style alias for content_location.
       additionalProperties: false
-    VideoJobCreationCredits:
-      type: object
-      required:
-      - charged
-      - remaining_after_debit
-      properties:
-        charged:
-          type: integer
-          minimum: 0
-          example: 1
-          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
-        remaining_after_debit:
-          type: integer
-          nullable: true
-          minimum: 0
-          example: 299
-          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
-        remainingAfterDebit:
-          type: integer
-          nullable: true
-          minimum: 0
-          example: 299
-          description: SDK-style alias for remaining_after_debit.
-      additionalProperties: false
     VideoJobStatusResponse:
       type: object
       required:
@@ -1163,384 +2260,6 @@ components:
           example: /api/v1/videos/api_video_8b1d2f4c6a7e9f0123456789
           description: SDK-style alias for content_location.
       additionalProperties: false
-    LivePortraitRecoveryDiagnostics:
-      type: object
-      required:
-      - source
-      - squareDrivingCropBypassAttempted
-      - squareDrivingCropBypassStage
-      properties:
-        source:
-          type: string
-          const: liveportrait
-        squareDrivingCropBypassAttempted:
-          type: boolean
-          const: true
-          description: True when Puppetry retried the LivePortrait render without square-driving crop after detecting the known failure mode.
-        squareDrivingCropBypassStage:
-          type: string
-          maxLength: 240
-          description: Redacted stage marker for the square-driving-crop bypass attempt. Signed URLs and trace secrets are never included.
-      additionalProperties: false
-    AudioVideoRequest:
-      type: object
-      allOf:
-      - anyOf:
-        - required:
-          - image_url
-        - required:
-          - imageUrl
-        - required:
-          - image
-        - required:
-          - portrait
-        - required:
-          - portrait_url
-        - required:
-          - portraitUrl
-        - required:
-          - avatar
-        - required:
-          - avatarUrl
-        - required:
-          - avatar_url
-        - required:
-          - photo
-        - required:
-          - photoUrl
-        - required:
-          - photo_url
-      - anyOf:
-        - required:
-          - audio_url
-        - required:
-          - audioUrl
-        - required:
-          - audio
-      properties:
-        image_url:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: HTTPS image URL for the portrait or puppet source.
-          example: https://example.com/portrait.png
-        imageUrl:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: CamelCase alias for image_url.
-          example: https://example.com/portrait.png
-        image:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Agent-friendly alias for image_url.
-          example: https://example.com/portrait.png
-        portrait:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Portrait image alias for image_url.
-          example: https://example.com/portrait.png
-        portrait_url:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Snake_case portrait alias for image_url.
-          example: https://example.com/portrait.png
-        portraitUrl:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: CamelCase portrait alias for image_url.
-          example: https://example.com/portrait.png
-        avatar:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Avatar image alias for image_url.
-          example: https://example.com/portrait.png
-        avatarUrl:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: CamelCase avatar alias for image_url.
-          example: https://example.com/portrait.png
-        avatar_url:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Snake_case avatar alias for image_url.
-          example: https://example.com/portrait.png
-        photo:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Photo image alias for image_url.
-          example: https://example.com/portrait.png
-        photoUrl:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: CamelCase photo alias for image_url.
-          example: https://example.com/portrait.png
-        photo_url:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Snake_case photo alias for image_url.
-          example: https://example.com/portrait.png
-        audio_url:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: HTTPS audio URL. Use /api/v1/uploads/audio-url when the audio is not already hosted; Puppetry-hosted API uploads must belong to the same API key that queues the video job. Rotated or expired signed read URL query params for the same hosted upload are treated as the same idempotent create input, and the stored key is re-signed before validation and queueing.
-          example: https://assets.puppetry.com/api-uploads/audio.mp3
-        audioUrl:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: CamelCase alias for audio_url.
-          example: https://assets.puppetry.com/api-uploads/audio.mp3
-        audio:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Agent-friendly alias for audio_url.
-          example: https://assets.puppetry.com/api-uploads/audio.mp3
-        expressiveness:
-          type: number
-          minimum: 0
-          maximum: 2
-          default: 1
-          description: LivePortrait expression scale for the generated talking-head motion.
-        idempotencyKey:
-          type: string
-          maxLength: 200
-          description: Optional request-body alias for the Idempotency-Key header. If both header and body aliases are provided, they must match.
-          example: audio-video-demo-1
-        idempotency_key:
-          type: string
-          maxLength: 200
-          description: Snake_case request-body alias for Idempotency-Key. If both body aliases are provided, they must match.
-          example: audio-video-demo-1
-      additionalProperties: false
-    TextVideoRequest:
-      type: object
-      allOf:
-      - anyOf:
-        - required:
-          - image_url
-        - required:
-          - imageUrl
-        - required:
-          - image
-        - required:
-          - portrait
-        - required:
-          - portrait_url
-        - required:
-          - portraitUrl
-        - required:
-          - avatar
-        - required:
-          - avatarUrl
-        - required:
-          - avatar_url
-        - required:
-          - photo
-        - required:
-          - photoUrl
-        - required:
-          - photo_url
-      - anyOf:
-        - required:
-          - text
-        - required:
-          - script
-        - required:
-          - prompt
-      properties:
-        image_url:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: HTTPS image URL for the portrait or puppet source.
-          example: https://example.com/portrait.png
-        imageUrl:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: CamelCase alias for image_url.
-          example: https://example.com/portrait.png
-        image:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Agent-friendly alias for image_url.
-          example: https://example.com/portrait.png
-        portrait:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Portrait image alias for image_url.
-          example: https://example.com/portrait.png
-        portrait_url:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Snake_case portrait alias for image_url.
-          example: https://example.com/portrait.png
-        portraitUrl:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: CamelCase portrait alias for image_url.
-          example: https://example.com/portrait.png
-        avatar:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Avatar image alias for image_url.
-          example: https://example.com/portrait.png
-        avatarUrl:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: CamelCase avatar alias for image_url.
-          example: https://example.com/portrait.png
-        avatar_url:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Snake_case avatar alias for image_url.
-          example: https://example.com/portrait.png
-        photo:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Photo image alias for image_url.
-          example: https://example.com/portrait.png
-        photoUrl:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: CamelCase photo alias for image_url.
-          example: https://example.com/portrait.png
-        photo_url:
-          type: string
-          format: uri
-          maxLength: 2048
-          description: Snake_case photo alias for image_url.
-          example: https://example.com/portrait.png
-        text:
-          type: string
-          minLength: 1
-          maxLength: 10000
-          description: Script text to speak in the generated video.
-          example: Hello from the Puppetry video API.
-        script:
-          type: string
-          minLength: 1
-          maxLength: 10000
-          description: Agent-friendly alias for text.
-          example: Hello from the Puppetry video API.
-        prompt:
-          type: string
-          minLength: 1
-          maxLength: 10000
-          description: Agent-friendly alias for text.
-          example: Hello from the Puppetry video API.
-        voice_id:
-          type: string
-          description: Public Puppetry voice ID from GET /api/v1/voices/puppetry. Defaults to the Puppetry default voice.
-          example: puppetry-af_heart
-        voiceId:
-          type: string
-          description: CamelCase alias for voice_id.
-          example: puppetry-af_heart
-        voice:
-          type: string
-          description: Agent-friendly alias for voice_id.
-          example: puppetry-af_heart
-        language:
-          type: string
-          minLength: 2
-          maxLength: 16
-          default: en
-          example: en
-        expressiveness:
-          type: number
-          minimum: 0
-          maximum: 2
-          default: 1
-          description: LivePortrait expression scale for the generated talking-head motion.
-        idempotencyKey:
-          type: string
-          maxLength: 200
-          description: Optional request-body alias for the Idempotency-Key header. If both header and body aliases are provided, they must match.
-          example: text-video-demo-1
-        idempotency_key:
-          type: string
-          maxLength: 200
-          description: Snake_case request-body alias for Idempotency-Key. If both body aliases are provided, they must match.
-          example: text-video-demo-1
-      additionalProperties: false
-    VideoJobDiagnostics:
-      type: object
-      properties:
-        apiAudioUpload:
-          $ref: '#/components/schemas/ApiAudioUploadFallbackDiagnostics'
-        livePortrait:
-          $ref: '#/components/schemas/LivePortraitRecoveryDiagnostics'
-      additionalProperties: false
-    ApiAudioUploadFallbackDiagnostics:
-      type: object
-      required:
-      - source
-      - key
-      - recoveredFromS3
-      properties:
-        source:
-          type: string
-          const: api-audio-upload-s3-fallback
-        key:
-          type: string
-          description: Sanitized S3 key for the hosted audio object recovered by the worker.
-        recoveredFromS3:
-          type: boolean
-          description: True when the worker recovered the render by falling back from the signed read URL to the trusted hosted upload object.
-        reason:
-          type: string
-          description: Redacted worker fallback reason. Signed URL secrets are never included.
-        s3FallbackRetryCount:
-          type: integer
-          minimum: 1
-          description: Number of retryable hosted upload S3 fallback failures observed before the terminal fallback result.
-        s3FallbackLastRetryReason:
-          type: string
-          description: Redacted reason from the most recent retryable hosted upload S3 fallback failure.
-        expectedETag:
-          type: string
-          description: Queued hosted upload ETag used for worker fallback validation.
-        expectedMimeType:
-          type: string
-          enum:
-          - audio/wav
-          - audio/mpeg
-          - audio/mp4
-        expectedSizeBytes:
-          type: number
-          minimum: 0
-          description: Queued hosted upload byte length used for worker fallback validation.
-        readUrlExpiresAt:
-          type: string
-          format: date-time
-          description: Signed hosted audio read URL expiry known when the worker started.
-        readUrlExpiredAtFallback:
-          type: boolean
-          description: True when the signed hosted audio read URL had expired at the worker fallback time.
-      additionalProperties: false
     ErrorResponse:
       type: object
       required:
@@ -1681,775 +2400,56 @@ components:
           type: string
           description: SDK-style alias for content_location.
       additionalProperties: true
-    VideoCredits:
-      type: object
-      required:
-      - charged
-      - remaining
-      properties:
-        charged:
-          type: integer
-          example: 1
-        remaining:
-          type: integer
-          nullable: true
-          example: 299
-      additionalProperties: false
-  responses:
-    UnsupportedMediaType:
-      description: The request body media type is not supported.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            unsupportedMediaType:
-              value:
-                error: unsupported_media_type
-                message: Content-Type must be application/json
-    RateLimited:
-      description: Rate limit or monthly beta quota exceeded
-      headers:
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        X-RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            rateLimited:
-              value:
-                error: rate_limited
-                message: 'Developer API beta limit exceeded: 10 requests per minute.'
-                retryable: true
-                retry_after_seconds: 30
-                retryAfter: 30
-                retryAfterSeconds: 30
-                next_poll_at: '2026-06-22T08:50:30.000Z'
-                nextPollAt: '2026-06-22T08:50:30.000Z'
-                details:
-                  retryable: true
-                  retry_after_seconds: 30
-                  retryAfter: 30
-                  retryAfterSeconds: 30
-                  next_poll_at: '2026-06-22T08:50:30.000Z'
-                  nextPollAt: '2026-06-22T08:50:30.000Z'
-            voiceCharacterLimit:
-              value:
-                error: voice_character_limit_exceeded
-                message: Monthly Puppetry Voice character limit exceeded
-                details:
-                  retryable: true
-                  retry_after_seconds: 86400
-                  retryAfter: 86400
-                  retryAfterSeconds: 86400
-            concurrentVideoJobLimit:
-              value:
-                error: concurrent_job_limit_exceeded
-                message: Developer API concurrent job limit exceeded
-                details:
-                  retryable: true
-                  concurrent_jobs: 2
-                  concurrentJobs: 2
-                  active_jobs: 2
-                  activeJobs: 2
-                  available_slots: 0
-                  availableSlots: 0
-                  active_job_expires_in_seconds: 512
-                  activeJobExpiresInSeconds: 512
-                  retry_after_seconds: 512
-                  retryAfter: 512
-                  retryAfterSeconds: 512
-    TemporarilyUnavailable:
-      description: A beta quota, usage lookup, or job counter is temporarily unavailable.
-      headers:
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-        X-Puppetry-Next-Poll-At:
-          $ref: '#/components/headers/NextPollAt'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            apiAuthUnavailable:
-              value:
-                error: api_auth_unavailable
-                message: Developer API authentication is temporarily unavailable
-                retryable: true
-                retry_after_seconds: 30
-                retryAfter: 30
-                retryAfterSeconds: 30
-                next_poll_at: '2026-06-22T08:50:30.000Z'
-                nextPollAt: '2026-06-22T08:50:30.000Z'
-                details:
-                  retryable: true
-                  retry_after_seconds: 30
-                  retryAfter: 30
-                  retryAfterSeconds: 30
-                  next_poll_at: '2026-06-22T08:50:30.000Z'
-                  nextPollAt: '2026-06-22T08:50:30.000Z'
-    UpstreamFailure:
-      description: Puppetry could not create or inspect the requested asset.
-      headers:
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-        X-Puppetry-Next-Poll-At:
-          $ref: '#/components/headers/NextPollAt'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            videoQueueFailed:
-              value:
-                error: video_queue_failed
-                message: Animation service did not return a video job id
-                details:
-                  retryable: true
-                  retry_after_seconds: 30
-                  retryAfter: 30
-                  retryAfterSeconds: 30
-                  next_poll_at: '2026-06-22T08:50:30.000Z'
-                  nextPollAt: '2026-06-22T08:50:30.000Z'
-            creditDebitUnavailable:
-              value:
-                error: credit_debit_unavailable
-                message: Video credit debit is temporarily unavailable
-                details:
-                  retryable: true
-                  retry_after_seconds: 30
-                  retryAfter: 30
-                  retryAfterSeconds: 30
-                  next_poll_at: '2026-06-22T08:50:30.000Z'
-                  nextPollAt: '2026-06-22T08:50:30.000Z'
-            assetProbeUnavailable:
-              value:
-                error: asset_probe_unavailable
-                message: audio_url is temporarily unavailable for inspection
-                details:
-                  retryable: true
-                  retry_after_seconds: 30
-                  retryAfter: 30
-                  retryAfterSeconds: 30
-            jobStatusUnavailable:
-              value:
-                error: job_status_unavailable
-                message: Video job status is temporarily unavailable
-                retryable: true
-                retry_after_seconds: 10
-                retryAfter: 10
-                retryAfterSeconds: 10
-                next_poll_at: '2026-06-22T08:50:10.000Z'
-                nextPollAt: '2026-06-22T08:50:10.000Z'
-                credits:
-                  charged: 0
-                  remaining: null
-                creation_credits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                creationCredits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                details:
-                  retryable: true
-                  retry_after_seconds: 10
-                  retryAfter: 10
-                  retryAfterSeconds: 10
-                  next_poll_at: '2026-06-22T08:50:10.000Z'
-                  nextPollAt: '2026-06-22T08:50:10.000Z'
-                  object: video_job
-                  id: api_video_abc123
-                  job_id: api_video_abc123
-                  jobId: api_video_abc123
-                  task_id: api_video_abc123
-                  taskId: api_video_abc123
-                  status_url: /api/v1/videos/api_video_abc123
-                  statusUrl: /api/v1/videos/api_video_abc123
-                  credits:
-                    charged: 0
-                    remaining: null
-                  creation_credits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  creationCredits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  created_at: '2026-06-22T08:50:00.000Z'
-                  createdAt: '2026-06-22T08:50:00.000Z'
-                  content_location: /api/v1/videos/api_video_abc123
-                  contentLocation: /api/v1/videos/api_video_abc123
-            jobResultUnavailable:
-              value:
-                error: job_result_unavailable
-                message: Video job result is temporarily unavailable
-                retryable: true
-                retry_after_seconds: 10
-                retryAfter: 10
-                retryAfterSeconds: 10
-                next_poll_at: '2026-06-22T08:50:10.000Z'
-                nextPollAt: '2026-06-22T08:50:10.000Z'
-                credits:
-                  charged: 0
-                  remaining: null
-                creation_credits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                creationCredits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                details:
-                  retryable: true
-                  retry_after_seconds: 10
-                  retryAfter: 10
-                  retryAfterSeconds: 10
-                  next_poll_at: '2026-06-22T08:50:10.000Z'
-                  nextPollAt: '2026-06-22T08:50:10.000Z'
-                  object: video_job
-                  id: api_video_abc123
-                  job_id: api_video_abc123
-                  jobId: api_video_abc123
-                  task_id: api_video_abc123
-                  taskId: api_video_abc123
-                  status_url: /api/v1/videos/api_video_abc123
-                  statusUrl: /api/v1/videos/api_video_abc123
-                  credits:
-                    charged: 0
-                    remaining: null
-                  creation_credits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  creationCredits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  created_at: '2026-06-22T08:50:00.000Z'
-                  createdAt: '2026-06-22T08:50:00.000Z'
-                  content_location: /api/v1/videos/api_video_abc123
-                  contentLocation: /api/v1/videos/api_video_abc123
-            jobFinalizationUnavailable:
-              value:
-                error: job_finalization_unavailable
-                message: Video job finalization is temporarily unavailable
-                retryable: true
-                retry_after_seconds: 10
-                retryAfter: 10
-                retryAfterSeconds: 10
-                next_poll_at: '2026-06-22T08:50:10.000Z'
-                nextPollAt: '2026-06-22T08:50:10.000Z'
-                credits:
-                  charged: 0
-                  remaining: null
-                creation_credits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                creationCredits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                details:
-                  retryable: true
-                  retry_after_seconds: 10
-                  retryAfter: 10
-                  retryAfterSeconds: 10
-                  next_poll_at: '2026-06-22T08:50:10.000Z'
-                  nextPollAt: '2026-06-22T08:50:10.000Z'
-                  object: video_job
-                  id: api_video_abc123
-                  job_id: api_video_abc123
-                  jobId: api_video_abc123
-                  task_id: api_video_abc123
-                  taskId: api_video_abc123
-                  status_url: /api/v1/videos/api_video_abc123
-                  statusUrl: /api/v1/videos/api_video_abc123
-                  credits:
-                    charged: 0
-                    remaining: null
-                  creation_credits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  creationCredits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  created_at: '2026-06-22T08:50:00.000Z'
-                  createdAt: '2026-06-22T08:50:00.000Z'
-                  content_location: /api/v1/videos/api_video_abc123
-                  contentLocation: /api/v1/videos/api_video_abc123
-    Forbidden:
-      description: The API key does not include the required endpoint scope.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            forbidden:
-              value:
-                error: forbidden
-                message: This API key does not have the required scope
-    InsufficientCredits:
-      description: The account does not have enough video credits to create the job.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            insufficientCredits:
-              value:
-                error: insufficient_credits
-                message: Not enough video credits to create a video job
-                details:
-                  code: insufficient_video_credits
-                  reason: insufficient_video_credits
-                  required_credits: 1
-                  requiredCredits: 1
-                  remaining_credits: 0
-                  remainingCredits: 0
-                  retryable: false
-                  retry_blocked_reason: Developer API video generation needs 1 credit, but only 0 remain.
-                  retryBlockedReason: Developer API video generation needs 1 credit, but only 0 remain.
-                  retry_block_code: INSUFFICIENT_VIDEO_CREDITS
-                  retryBlockCode: INSUFFICIENT_VIDEO_CREDITS
-                  checkout_url: https://www.puppetry.com/pricing#pricing-credit-packs
-                  checkoutUrl: https://www.puppetry.com/pricing#pricing-credit-packs
-                  top_up: Buy 5 video credits for $4.99 at https://www.puppetry.com/pricing#pricing-credit-packs
-                  topUp: Buy 5 video credits for $4.99 at https://www.puppetry.com/pricing#pricing-credit-packs
-                  video_generation:
-                    can_create: false
-                    canCreate: false
-                    required_credits: 1
-                    requiredCredits: 1
-                    credits_remaining: 0
-                    creditsRemaining: 0
-                    concurrent_jobs: 2
-                    concurrentJobs: 2
-                    active_jobs: 0
-                    activeJobs: 0
-                    available_slots: 2
-                    availableSlots: 2
-                    reason: insufficient_video_credits
-                  videoGeneration:
-                    can_create: false
-                    canCreate: false
-                    required_credits: 1
-                    requiredCredits: 1
-                    credits_remaining: 0
-                    creditsRemaining: 0
-                    concurrent_jobs: 2
-                    concurrentJobs: 2
-                    active_jobs: 0
-                    activeJobs: 0
-                    available_slots: 2
-                    availableSlots: 2
-                    reason: insufficient_video_credits
-    IdempotencyConflict:
-      description: The Idempotency-Key is already creating a video job or hosted upload URL, or it was reused with different input. Video create conflicts include Location/Content-Location, Puppetry-Operation-Id, and Puppetry-Request-Id headers for the existing API video job when one is known.
-      headers:
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-        X-Puppetry-Next-Poll-At:
-          $ref: '#/components/headers/NextPollAt'
-        Location:
-          $ref: '#/components/headers/VideoJobStatusLocation'
-        Content-Location:
-          $ref: '#/components/headers/VideoJobStatusLocation'
-        Puppetry-Operation-Id:
-          $ref: '#/components/headers/VideoJobOperationId'
-        X-Puppetry-Operation-Id:
-          $ref: '#/components/headers/VideoJobOperationId'
-        Puppetry-Request-Id:
-          $ref: '#/components/headers/VideoJobRequestId'
-        X-Puppetry-Request-Id:
-          $ref: '#/components/headers/VideoJobRequestId'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            idempotencyInProgress:
-              value:
-                error: idempotency_key_in_progress
-                message: A video job or upload URL with this Idempotency-Key is already being created. Retry this request shortly.
-                details:
-                  retryable: true
-                  retry_after_seconds: 5
-                  retryAfter: 5
-                  retryAfterSeconds: 5
-                  next_poll_at: '2026-06-22T08:50:05.000Z'
-                  nextPollAt: '2026-06-22T08:50:05.000Z'
-            idempotencyKeyConflict:
-              value:
-                error: idempotency_key_conflict
-                message: Idempotency-Key was already used with a different video create request
-                object: video_job
-                id: api_video_existing
-                job_id: api_video_existing
-                jobId: api_video_existing
-                operation_id: api_video_existing
-                operationId: api_video_existing
-                request_id: api_video_existing
-                requestId: api_video_existing
-                source: text
-                request_source: text
-                requestSource: text
-                status_url: /api/v1/videos/api_video_existing
-                statusUrl: /api/v1/videos/api_video_existing
-                content_location: /api/v1/videos/api_video_existing
-                contentLocation: /api/v1/videos/api_video_existing
-                details:
-                  retryable: false
-                  retry_blocked_reason: Idempotency-Key was already used with a different video create request
-                  retryBlockedReason: Idempotency-Key was already used with a different video create request
-                  retry_block_code: IDEMPOTENCY_KEY_CONFLICT
-                  retryBlockCode: IDEMPOTENCY_KEY_CONFLICT
-                  object: video_job
-                  id: api_video_existing
-                  status_url: /api/v1/videos/api_video_existing
-                  statusUrl: /api/v1/videos/api_video_existing
-                  content_location: /api/v1/videos/api_video_existing
-                  contentLocation: /api/v1/videos/api_video_existing
-    Unauthorized:
-      description: Missing, malformed, invalid, or revoked API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            unauthorized:
-              value:
-                error: unauthorized
-                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
-    VideoJobStatusTimeout:
-      description: Puppetry timed out while checking an accepted video job. Retry-After, X-Puppetry-Next-Poll-At, Location, Content-Location, Puppetry-Operation-Id, and Puppetry-Request-Id identify and pace the same status poll target.
-      headers:
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-        X-Puppetry-Next-Poll-At:
-          $ref: '#/components/headers/NextPollAt'
-        Location:
-          $ref: '#/components/headers/VideoJobStatusLocation'
-        Content-Location:
-          $ref: '#/components/headers/VideoJobStatusLocation'
-        Puppetry-Operation-Id:
-          $ref: '#/components/headers/VideoJobOperationId'
-        X-Puppetry-Operation-Id:
-          $ref: '#/components/headers/VideoJobOperationId'
-        Puppetry-Request-Id:
-          $ref: '#/components/headers/VideoJobRequestId'
-        X-Puppetry-Request-Id:
-          $ref: '#/components/headers/VideoJobRequestId'
-        X-Puppetry-Credits-Required:
-          $ref: '#/components/headers/VideoJobCreditsRequired'
-        X-Puppetry-Credits-Remaining:
-          $ref: '#/components/headers/VideoJobCreditsRemaining'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            statusTimeout:
-              value:
-                error: job_status_timeout
-                message: Video job status lookup timed out
-                retryable: true
-                retry_after_seconds: 10
-                retryAfter: 10
-                retryAfterSeconds: 10
-                next_poll_at: '2026-06-22T08:50:10.000Z'
-                nextPollAt: '2026-06-22T08:50:10.000Z'
-                credits:
-                  charged: 0
-                  remaining: null
-                creation_credits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                creationCredits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                details:
-                  retryable: true
-                  retry_after_seconds: 10
-                  retryAfter: 10
-                  retryAfterSeconds: 10
-                  next_poll_at: '2026-06-22T08:50:10.000Z'
-                  nextPollAt: '2026-06-22T08:50:10.000Z'
-                  object: video_job
-                  id: api_video_abc123
-                  job_id: api_video_abc123
-                  jobId: api_video_abc123
-                  task_id: api_video_abc123
-                  taskId: api_video_abc123
-                  status_url: /api/v1/videos/api_video_abc123
-                  statusUrl: /api/v1/videos/api_video_abc123
-                  credits:
-                    charged: 0
-                    remaining: null
-                  creation_credits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  creationCredits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  created_at: '2026-06-22T08:50:00.000Z'
-                  createdAt: '2026-06-22T08:50:00.000Z'
-                  content_location: /api/v1/videos/api_video_abc123
-                  contentLocation: /api/v1/videos/api_video_abc123
-    InvalidRequest:
-      description: Invalid request body or unsupported input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            hostedAudioUploadUnavailable:
-              value:
-                error: hosted_audio_upload_unavailable
-                message: Hosted audio upload ownership is temporarily unavailable
-                details:
-                  retry_after_seconds: 217
-                  retryAfter: 217
-                  retryAfterSeconds: 217
-            hostedAudioUploadNotFound:
-              value:
-                error: invalid_request
-                message: audio_url must reference a hosted API audio upload owned by this API key
-                details:
-                  retryable: false
-                  retry_blocked_reason: audio_url must reference a hosted API audio upload owned by this API key
-                  retryBlockedReason: audio_url must reference a hosted API audio upload owned by this API key
-                  retry_block_code: HOSTED_AUDIO_UPLOAD_NOT_FOUND
-                  retryBlockCode: HOSTED_AUDIO_UPLOAD_NOT_FOUND
-            hostedAudioUploadPending:
-              value:
-                error: invalid_request
-                message: audio_url hosted upload has not finished uploading; upload the file before creating a video
-                details:
-                  retryable: false
-                  retry_blocked_reason: audio_url hosted upload has not finished uploading; upload the file before creating a video
-                  retryBlockedReason: audio_url hosted upload has not finished uploading; upload the file before creating a video
-                  retry_block_code: HOSTED_AUDIO_UPLOAD_PENDING
-                  retryBlockCode: HOSTED_AUDIO_UPLOAD_PENDING
-            invalidImage:
-              value:
-                error: invalid_image
-                message: image_url must be a supported image
-                details:
-                  retryable: false
-                  retry_blocked_reason: image_url must be a supported image
-                  retryBlockedReason: image_url must be a supported image
-                  retry_block_code: INVALID_VIDEO_IMAGE
-                  retryBlockCode: INVALID_VIDEO_IMAGE
-            audioTooLong:
-              value:
-                error: audio_too_long
-                message: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
-                details:
-                  duration_seconds: 529.42
-                  max_duration_seconds: 300
-                  retryable: false
-                  retry_blocked_reason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
-                  retryBlockedReason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
-                  retry_block_code: VIDEO_CREATE_AUDIO_TOO_LONG
-                  retryBlockCode: VIDEO_CREATE_AUDIO_TOO_LONG
-    VideoJobStatusUnavailable:
-      description: Puppetry could not inspect an accepted video job. Retry-After, X-Puppetry-Next-Poll-At, Location, Content-Location, Puppetry-Operation-Id, and Puppetry-Request-Id identify and pace the same status poll target.
-      headers:
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-        X-Puppetry-Next-Poll-At:
-          $ref: '#/components/headers/NextPollAt'
-        Location:
-          $ref: '#/components/headers/VideoJobStatusLocation'
-        Content-Location:
-          $ref: '#/components/headers/VideoJobStatusLocation'
-        Puppetry-Operation-Id:
-          $ref: '#/components/headers/VideoJobOperationId'
-        X-Puppetry-Operation-Id:
-          $ref: '#/components/headers/VideoJobOperationId'
-        Puppetry-Request-Id:
-          $ref: '#/components/headers/VideoJobRequestId'
-        X-Puppetry-Request-Id:
-          $ref: '#/components/headers/VideoJobRequestId'
-        X-Puppetry-Credits-Required:
-          $ref: '#/components/headers/VideoJobCreditsRequired'
-        X-Puppetry-Credits-Remaining:
-          $ref: '#/components/headers/VideoJobCreditsRemaining'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            jobStatusUnavailable:
-              value:
-                error: job_status_unavailable
-                message: Video job status is temporarily unavailable
-                retryable: true
-                retry_after_seconds: 10
-                retryAfter: 10
-                retryAfterSeconds: 10
-                next_poll_at: '2026-06-22T08:50:10.000Z'
-                nextPollAt: '2026-06-22T08:50:10.000Z'
-                credits:
-                  charged: 0
-                  remaining: null
-                creation_credits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                creationCredits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                details:
-                  retryable: true
-                  retry_after_seconds: 10
-                  retryAfter: 10
-                  retryAfterSeconds: 10
-                  next_poll_at: '2026-06-22T08:50:10.000Z'
-                  nextPollAt: '2026-06-22T08:50:10.000Z'
-                  object: video_job
-                  id: api_video_abc123
-                  job_id: api_video_abc123
-                  jobId: api_video_abc123
-                  task_id: api_video_abc123
-                  taskId: api_video_abc123
-                  status_url: /api/v1/videos/api_video_abc123
-                  statusUrl: /api/v1/videos/api_video_abc123
-                  credits:
-                    charged: 0
-                    remaining: null
-                  creation_credits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  creationCredits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  created_at: '2026-06-22T08:50:00.000Z'
-                  createdAt: '2026-06-22T08:50:00.000Z'
-                  content_location: /api/v1/videos/api_video_abc123
-                  contentLocation: /api/v1/videos/api_video_abc123
-            jobResultUnavailable:
-              value:
-                error: job_result_unavailable
-                message: Video job result is temporarily unavailable
-                retryable: true
-                retry_after_seconds: 10
-                retryAfter: 10
-                retryAfterSeconds: 10
-                next_poll_at: '2026-06-22T08:50:10.000Z'
-                nextPollAt: '2026-06-22T08:50:10.000Z'
-                credits:
-                  charged: 0
-                  remaining: null
-                creation_credits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                creationCredits:
-                  charged: 1
-                  remaining_after_debit: 299
-                  remainingAfterDebit: 299
-                details:
-                  retryable: true
-                  retry_after_seconds: 10
-                  retryAfter: 10
-                  retryAfterSeconds: 10
-                  next_poll_at: '2026-06-22T08:50:10.000Z'
-                  nextPollAt: '2026-06-22T08:50:10.000Z'
-                  object: video_job
-                  id: api_video_abc123
-                  job_id: api_video_abc123
-                  jobId: api_video_abc123
-                  task_id: api_video_abc123
-                  taskId: api_video_abc123
-                  status_url: /api/v1/videos/api_video_abc123
-                  statusUrl: /api/v1/videos/api_video_abc123
-                  credits:
-                    charged: 0
-                    remaining: null
-                  creation_credits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  creationCredits:
-                    charged: 1
-                    remaining_after_debit: 299
-                    remainingAfterDebit: 299
-                  created_at: '2026-06-22T08:50:00.000Z'
-                  createdAt: '2026-06-22T08:50:00.000Z'
-                  content_location: /api/v1/videos/api_video_abc123
-                  contentLocation: /api/v1/videos/api_video_abc123
   headers:
-    VideoJobStatusLocation:
-      description: Absolute status URL for the API video job in response headers. Mirrors the status_url/content_location JSON body fields as a fully qualified poll URL.
-      schema:
-        type: string
-        example: https://www.puppetry.com/api/v1/videos/api_video_8b1d2f4c6a7e9f0123456789
-    RateLimitLimit:
-      description: Requests allowed in the current one-minute window.
-      schema:
-        type: integer
-        example: 10
-    RetryAfter:
-      description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
-      schema:
-        type: integer
-        example: 30
-    RateLimitRemaining:
-      description: Requests remaining in the current one-minute window.
-      schema:
-        type: integer
-        example: 9
-    VideoJobRequestId:
-      description: Stable public request id for correlating a Developer API video job with backend logs. Mirrors the JSON request_id field and never exposes the internal animation service job id.
-      schema:
-        type: string
-        pattern: ^api_video_
-        example: api_video_8b1d2f4c6a7e9f0123456789
-    VideoJobOperationId:
-      description: Stable public operation id for the Developer API video job. Mirrors the JSON id/operation_id field and never exposes the internal animation service job id.
-      schema:
-        type: string
-        pattern: ^api_video_
-        example: api_video_8b1d2f4c6a7e9f0123456789
     RateLimitReset:
       description: Unix timestamp, in seconds, when the current rate-limit window resets.
       schema:
         type: integer
         example: 1778520000
-    VideoJobCreditsRemaining:
-      description: Video credit balance after the Developer API video create debit. Fresh create responses and status responses include this when create-time debit evidence is available.
-      schema:
-        type: integer
-        minimum: 0
-        example: 299
     NextPollAt:
       description: Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.
       schema:
         type: string
         format: date-time
         example: '2026-06-22T08:50:30.000Z'
+    VideoJobStatusLocation:
+      description: Absolute status URL for the API video job in response headers. Mirrors the status_url/content_location JSON body fields as a fully qualified poll URL.
+      schema:
+        type: string
+        example: https://www.puppetry.com/api/v1/videos/api_video_8b1d2f4c6a7e9f0123456789
+    VideoJobOperationId:
+      description: Stable public operation id for the Developer API video job. Mirrors the JSON id/operation_id field and never exposes the internal animation service job id.
+      schema:
+        type: string
+        pattern: ^api_video_
+        example: api_video_8b1d2f4c6a7e9f0123456789
+    RetryAfter:
+      description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
+      schema:
+        type: integer
+        example: 30
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+        example: 10
+    VideoJobCreditsRemaining:
+      description: Video credit balance after the Developer API video create debit. Fresh create responses and status responses include this when create-time debit evidence is available.
+      schema:
+        type: integer
+        minimum: 0
+        example: 299
+    VideoJobRequestId:
+      description: Stable public request id for correlating a Developer API video job with backend logs. Mirrors the JSON request_id field and never exposes the internal animation service job id.
+      schema:
+        type: string
+        pattern: ^api_video_
+        example: api_video_8b1d2f4c6a7e9f0123456789
+    RateLimitRemaining:
+      description: Requests remaining in the current one-minute window.
+      schema:
+        type: integer
+        example: 9
     VideoJobCreditsRequired:
       description: Video credits charged or required for the Developer API video create operation. Fresh create responses and status responses include this when create-time debit evidence is available.
       schema:

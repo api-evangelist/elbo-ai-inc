@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Puppetry Developer API Beta Audio Uploads Text to Speech API
+  title: Puppetry Developer API Beta Text to Speech API
   description: Live Puppetry Developer API beta for Puppetry Voice API access, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.
   version: '2026-05-11'
   contact:
@@ -16,7 +16,7 @@ servers:
 security:
 - developerApiKey: []
 tags:
-- name: Text to Speech
+- name: Text To Speech
 paths:
   /api/v1/tts/puppetry:
     post:
@@ -25,7 +25,7 @@ paths:
       summary: Generate speech with a Puppetry voice
       description: Creates a hosted WAV audio file from text using a public Puppetry voice. Requires the tts:create scope.
       tags:
-      - Text to Speech
+      - Text To Speech
       security:
       - developerApiKey: []
       requestBody:
@@ -79,7 +79,342 @@ paths:
         '503':
           $ref: '#/components/responses/TemporarilyUnavailable'
 components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          examples:
+          - invalid_request
+          - unauthorized
+          - rate_limited
+        message:
+          type: string
+        object:
+          type: string
+          const: video_job
+          description: Present on retryable transient video-status errors when the affected API video job is known.
+        id:
+          type: string
+          description: Present on retryable transient video-status errors. API video job ID to keep polling.
+        credits:
+          type: object
+          description: Present on retryable transient video-status errors for accepted API video jobs. Status polls are never billed, so charged is 0.
+          properties:
+            charged:
+              type: integer
+              minimum: 0
+              example: 0
+            remaining:
+              type:
+              - integer
+              - 'null'
+              minimum: 0
+              description: Current balance if available; null when the status poll did not fetch credit state.
+          additionalProperties: false
+        creation_credits:
+          $ref: '#/components/schemas/VideoJobCreationCredits'
+          description: Original create-time video credit debit evidence for the affected API video job when available.
+        creationCredits:
+          $ref: '#/components/schemas/VideoJobCreationCredits'
+          description: SDK-style alias for creation_credits.
+        retryable:
+          type: boolean
+          description: Present on retryable transient errors and non-retryable terminal video-create/status errors so generated clients can identify retry/backoff behavior without parsing details.
+        retry_blocked_reason:
+          type: string
+          description: Present on non-retryable terminal video-create/status errors. Redacted reason explaining why clients should not retry the same request.
+        retryBlockedReason:
+          type: string
+          description: SDK-style alias for retry_blocked_reason.
+        retry_block_code:
+          type: string
+          description: Present on non-retryable terminal video-create/status errors. Stable retry-block code suitable for generated clients.
+        retryBlockCode:
+          type: string
+          description: SDK-style alias for retry_block_code.
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+          description: Present on retryable transient errors. Mirrors Retry-After and details.retry_after_seconds.
+        retryAfter:
+          type: integer
+          minimum: 0
+          description: SDK-style alias for retry_after_seconds.
+        retryAfterSeconds:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for retry_after_seconds.
+        next_poll_at:
+          type: string
+          format: date-time
+          description: Present on retryable transient errors. Absolute UTC time when clients should retry the request or poll again.
+        nextPollAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for next_poll_at.
+        job_id:
+          type: string
+          description: Present on retryable transient video-status errors so clients can correlate the retry to the API video job.
+        jobId:
+          type: string
+          description: SDK-style alias for job_id.
+        task_id:
+          type: string
+          description: Task-style alias for job_id on retryable transient video-status errors.
+        taskId:
+          type: string
+          description: CamelCase task-style alias for job_id.
+        source:
+          type: string
+          enum:
+          - text
+          - audio
+          description: Video creation source for the affected API video job.
+        request_source:
+          type: string
+          enum:
+          - text
+          - audio
+          description: Alias for source.
+        requestSource:
+          type: string
+          enum:
+          - text
+          - audio
+          description: SDK-style alias for source.
+        status_url:
+          type: string
+          description: Present on retryable transient video-status errors so clients know which job resource to poll next.
+        statusUrl:
+          type: string
+          description: SDK-style alias for status_url.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time for the affected API video job.
+        createdAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for created_at.
+        expires_at:
+          type: string
+          format: date-time
+          description: When the affected API video job record expires from status lookup.
+        expiresAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for expires_at.
+        details:
+          description: Endpoint-specific diagnostic fields.
+          type: object
+          additionalProperties: true
+        content_location:
+          type: string
+          description: Body alias for the status poll URL, mirroring the Content-Location response header target for clients that cannot reliably read headers.
+        contentLocation:
+          type: string
+          description: SDK-style alias for content_location.
+      additionalProperties: true
+    VideoJobCreationCredits:
+      type: object
+      required:
+      - charged
+      - remaining_after_debit
+      properties:
+        charged:
+          type: integer
+          minimum: 0
+          example: 1
+          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
+        remaining_after_debit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
+        remainingAfterDebit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: SDK-style alias for remaining_after_debit.
+      additionalProperties: false
+    TtsRequest:
+      type: object
+      required:
+      - voice_id
+      - text
+      properties:
+        voice_id:
+          type: string
+          description: Public voice ID from GET /api/v1/voices/puppetry.
+          example: puppetry-af_bella
+        text:
+          type: string
+          minLength: 1
+          maxLength: 5000
+          description: Text to synthesize.
+          example: Hello from Puppetry.
+        speed:
+          type: number
+          minimum: 0.5
+          maximum: 2
+          default: 1
+          description: Speech speed multiplier.
+      additionalProperties: false
+    TtsResponse:
+      type: object
+      required:
+      - object
+      - id
+      - voice_id
+      - audio_url
+      - format
+      - usage
+      properties:
+        object:
+          type: string
+          const: audio
+        id:
+          type: string
+          description: Generated audio asset ID.
+        voice_id:
+          type: string
+          example: puppetry-af_bella
+        audio_url:
+          type: string
+          format: uri
+          description: Hosted URL for the generated WAV audio.
+        format:
+          type: string
+          const: wav
+        usage:
+          type: object
+          required:
+          - voice_characters
+          properties:
+            voice_characters:
+              type: object
+              required:
+              - used
+              - limit
+              - remaining
+              properties:
+                used:
+                  type: integer
+                  example: 20
+                limit:
+                  type: integer
+                  example: 100000
+                remaining:
+                  type: integer
+                  example: 99980
+              additionalProperties: false
+          additionalProperties: false
+      additionalProperties: false
   responses:
+    Unauthorized:
+      description: Missing, malformed, invalid, or revoked API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unauthorized:
+              value:
+                error: unauthorized
+                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
+    InvalidRequest:
+      description: Invalid request body or unsupported input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            hostedAudioUploadUnavailable:
+              value:
+                error: hosted_audio_upload_unavailable
+                message: Hosted audio upload ownership is temporarily unavailable
+                details:
+                  retry_after_seconds: 217
+                  retryAfter: 217
+                  retryAfterSeconds: 217
+            hostedAudioUploadNotFound:
+              value:
+                error: invalid_request
+                message: audio_url must reference a hosted API audio upload owned by this API key
+                details:
+                  retryable: false
+                  retry_blocked_reason: audio_url must reference a hosted API audio upload owned by this API key
+                  retryBlockedReason: audio_url must reference a hosted API audio upload owned by this API key
+                  retry_block_code: HOSTED_AUDIO_UPLOAD_NOT_FOUND
+                  retryBlockCode: HOSTED_AUDIO_UPLOAD_NOT_FOUND
+            hostedAudioUploadPending:
+              value:
+                error: invalid_request
+                message: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                details:
+                  retryable: false
+                  retry_blocked_reason: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                  retryBlockedReason: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                  retry_block_code: HOSTED_AUDIO_UPLOAD_PENDING
+                  retryBlockCode: HOSTED_AUDIO_UPLOAD_PENDING
+            invalidImage:
+              value:
+                error: invalid_image
+                message: image_url must be a supported image
+                details:
+                  retryable: false
+                  retry_blocked_reason: image_url must be a supported image
+                  retryBlockedReason: image_url must be a supported image
+                  retry_block_code: INVALID_VIDEO_IMAGE
+                  retryBlockCode: INVALID_VIDEO_IMAGE
+            audioTooLong:
+              value:
+                error: audio_too_long
+                message: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                details:
+                  duration_seconds: 529.42
+                  max_duration_seconds: 300
+                  retryable: false
+                  retry_blocked_reason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                  retryBlockedReason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                  retry_block_code: VIDEO_CREATE_AUDIO_TOO_LONG
+                  retryBlockCode: VIDEO_CREATE_AUDIO_TOO_LONG
+    TemporarilyUnavailable:
+      description: A beta quota, usage lookup, or job counter is temporarily unavailable.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+        X-Puppetry-Next-Poll-At:
+          $ref: '#/components/headers/NextPollAt'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            apiAuthUnavailable:
+              value:
+                error: api_auth_unavailable
+                message: Developer API authentication is temporarily unavailable
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
     Forbidden:
       description: The API key does not include the required endpoint scope.
       content:
@@ -150,103 +485,6 @@ components:
                   retry_after_seconds: 512
                   retryAfter: 512
                   retryAfterSeconds: 512
-    Unauthorized:
-      description: Missing, malformed, invalid, or revoked API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            unauthorized:
-              value:
-                error: unauthorized
-                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
-    TemporarilyUnavailable:
-      description: A beta quota, usage lookup, or job counter is temporarily unavailable.
-      headers:
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-        X-Puppetry-Next-Poll-At:
-          $ref: '#/components/headers/NextPollAt'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            apiAuthUnavailable:
-              value:
-                error: api_auth_unavailable
-                message: Developer API authentication is temporarily unavailable
-                retryable: true
-                retry_after_seconds: 30
-                retryAfter: 30
-                retryAfterSeconds: 30
-                next_poll_at: '2026-06-22T08:50:30.000Z'
-                nextPollAt: '2026-06-22T08:50:30.000Z'
-                details:
-                  retryable: true
-                  retry_after_seconds: 30
-                  retryAfter: 30
-                  retryAfterSeconds: 30
-                  next_poll_at: '2026-06-22T08:50:30.000Z'
-                  nextPollAt: '2026-06-22T08:50:30.000Z'
-    InvalidRequest:
-      description: Invalid request body or unsupported input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            hostedAudioUploadUnavailable:
-              value:
-                error: hosted_audio_upload_unavailable
-                message: Hosted audio upload ownership is temporarily unavailable
-                details:
-                  retry_after_seconds: 217
-                  retryAfter: 217
-                  retryAfterSeconds: 217
-            hostedAudioUploadNotFound:
-              value:
-                error: invalid_request
-                message: audio_url must reference a hosted API audio upload owned by this API key
-                details:
-                  retryable: false
-                  retry_blocked_reason: audio_url must reference a hosted API audio upload owned by this API key
-                  retryBlockedReason: audio_url must reference a hosted API audio upload owned by this API key
-                  retry_block_code: HOSTED_AUDIO_UPLOAD_NOT_FOUND
-                  retryBlockCode: HOSTED_AUDIO_UPLOAD_NOT_FOUND
-            hostedAudioUploadPending:
-              value:
-                error: invalid_request
-                message: audio_url hosted upload has not finished uploading; upload the file before creating a video
-                details:
-                  retryable: false
-                  retry_blocked_reason: audio_url hosted upload has not finished uploading; upload the file before creating a video
-                  retryBlockedReason: audio_url hosted upload has not finished uploading; upload the file before creating a video
-                  retry_block_code: HOSTED_AUDIO_UPLOAD_PENDING
-                  retryBlockCode: HOSTED_AUDIO_UPLOAD_PENDING
-            invalidImage:
-              value:
-                error: invalid_image
-                message: image_url must be a supported image
-                details:
-                  retryable: false
-                  retry_blocked_reason: image_url must be a supported image
-                  retryBlockedReason: image_url must be a supported image
-                  retry_block_code: INVALID_VIDEO_IMAGE
-                  retryBlockCode: INVALID_VIDEO_IMAGE
-            audioTooLong:
-              value:
-                error: audio_too_long
-                message: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
-                details:
-                  duration_seconds: 529.42
-                  max_duration_seconds: 300
-                  retryable: false
-                  retry_blocked_reason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
-                  retryBlockedReason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
-                  retry_block_code: VIDEO_CREATE_AUDIO_TOO_LONG
-                  retryBlockCode: VIDEO_CREATE_AUDIO_TOO_LONG
     UpstreamFailure:
       description: Puppetry could not create or inspect the requested asset.
       headers:
@@ -444,17 +682,16 @@ components:
                   content_location: /api/v1/videos/api_video_abc123
                   contentLocation: /api/v1/videos/api_video_abc123
   headers:
-    NextPollAt:
-      description: Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.
-      schema:
-        type: string
-        format: date-time
-        example: '2026-06-22T08:50:30.000Z'
     RetryAfter:
       description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
       schema:
         type: integer
         example: 30
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+        example: 10
     RateLimitRemaining:
       description: Requests remaining in the current one-minute window.
       schema:
@@ -465,249 +702,12 @@ components:
       schema:
         type: integer
         example: 1778520000
-    RateLimitLimit:
-      description: Requests allowed in the current one-minute window.
+    NextPollAt:
+      description: Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.
       schema:
-        type: integer
-        example: 10
-  schemas:
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      - message
-      properties:
-        error:
-          type: string
-          examples:
-          - invalid_request
-          - unauthorized
-          - rate_limited
-        message:
-          type: string
-        object:
-          type: string
-          const: video_job
-          description: Present on retryable transient video-status errors when the affected API video job is known.
-        id:
-          type: string
-          description: Present on retryable transient video-status errors. API video job ID to keep polling.
-        credits:
-          type: object
-          description: Present on retryable transient video-status errors for accepted API video jobs. Status polls are never billed, so charged is 0.
-          properties:
-            charged:
-              type: integer
-              minimum: 0
-              example: 0
-            remaining:
-              type:
-              - integer
-              - 'null'
-              minimum: 0
-              description: Current balance if available; null when the status poll did not fetch credit state.
-          additionalProperties: false
-        creation_credits:
-          $ref: '#/components/schemas/VideoJobCreationCredits'
-          description: Original create-time video credit debit evidence for the affected API video job when available.
-        creationCredits:
-          $ref: '#/components/schemas/VideoJobCreationCredits'
-          description: SDK-style alias for creation_credits.
-        retryable:
-          type: boolean
-          description: Present on retryable transient errors and non-retryable terminal video-create/status errors so generated clients can identify retry/backoff behavior without parsing details.
-        retry_blocked_reason:
-          type: string
-          description: Present on non-retryable terminal video-create/status errors. Redacted reason explaining why clients should not retry the same request.
-        retryBlockedReason:
-          type: string
-          description: SDK-style alias for retry_blocked_reason.
-        retry_block_code:
-          type: string
-          description: Present on non-retryable terminal video-create/status errors. Stable retry-block code suitable for generated clients.
-        retryBlockCode:
-          type: string
-          description: SDK-style alias for retry_block_code.
-        retry_after_seconds:
-          type: integer
-          minimum: 0
-          description: Present on retryable transient errors. Mirrors Retry-After and details.retry_after_seconds.
-        retryAfter:
-          type: integer
-          minimum: 0
-          description: SDK-style alias for retry_after_seconds.
-        retryAfterSeconds:
-          type: integer
-          minimum: 0
-          description: CamelCase alias for retry_after_seconds.
-        next_poll_at:
-          type: string
-          format: date-time
-          description: Present on retryable transient errors. Absolute UTC time when clients should retry the request or poll again.
-        nextPollAt:
-          type: string
-          format: date-time
-          description: SDK-style alias for next_poll_at.
-        job_id:
-          type: string
-          description: Present on retryable transient video-status errors so clients can correlate the retry to the API video job.
-        jobId:
-          type: string
-          description: SDK-style alias for job_id.
-        task_id:
-          type: string
-          description: Task-style alias for job_id on retryable transient video-status errors.
-        taskId:
-          type: string
-          description: CamelCase task-style alias for job_id.
-        source:
-          type: string
-          enum:
-          - text
-          - audio
-          description: Video creation source for the affected API video job.
-        request_source:
-          type: string
-          enum:
-          - text
-          - audio
-          description: Alias for source.
-        requestSource:
-          type: string
-          enum:
-          - text
-          - audio
-          description: SDK-style alias for source.
-        status_url:
-          type: string
-          description: Present on retryable transient video-status errors so clients know which job resource to poll next.
-        statusUrl:
-          type: string
-          description: SDK-style alias for status_url.
-        created_at:
-          type: string
-          format: date-time
-          description: Creation time for the affected API video job.
-        createdAt:
-          type: string
-          format: date-time
-          description: SDK-style alias for created_at.
-        expires_at:
-          type: string
-          format: date-time
-          description: When the affected API video job record expires from status lookup.
-        expiresAt:
-          type: string
-          format: date-time
-          description: SDK-style alias for expires_at.
-        details:
-          description: Endpoint-specific diagnostic fields.
-          type: object
-          additionalProperties: true
-        content_location:
-          type: string
-          description: Body alias for the status poll URL, mirroring the Content-Location response header target for clients that cannot reliably read headers.
-        contentLocation:
-          type: string
-          description: SDK-style alias for content_location.
-      additionalProperties: true
-    VideoJobCreationCredits:
-      type: object
-      required:
-      - charged
-      - remaining_after_debit
-      properties:
-        charged:
-          type: integer
-          minimum: 0
-          example: 1
-          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
-        remaining_after_debit:
-          type: integer
-          nullable: true
-          minimum: 0
-          example: 299
-          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
-        remainingAfterDebit:
-          type: integer
-          nullable: true
-          minimum: 0
-          example: 299
-          description: SDK-style alias for remaining_after_debit.
-      additionalProperties: false
-    TtsResponse:
-      type: object
-      required:
-      - object
-      - id
-      - voice_id
-      - audio_url
-      - format
-      - usage
-      properties:
-        object:
-          type: string
-          const: audio
-        id:
-          type: string
-          description: Generated audio asset ID.
-        voice_id:
-          type: string
-          example: puppetry-af_bella
-        audio_url:
-          type: string
-          format: uri
-          description: Hosted URL for the generated WAV audio.
-        format:
-          type: string
-          const: wav
-        usage:
-          type: object
-          required:
-          - voice_characters
-          properties:
-            voice_characters:
-              type: object
-              required:
-              - used
-              - limit
-              - remaining
-              properties:
-                used:
-                  type: integer
-                  example: 20
-                limit:
-                  type: integer
-                  example: 100000
-                remaining:
-                  type: integer
-                  example: 99980
-              additionalProperties: false
-          additionalProperties: false
-      additionalProperties: false
-    TtsRequest:
-      type: object
-      required:
-      - voice_id
-      - text
-      properties:
-        voice_id:
-          type: string
-          description: Public voice ID from GET /api/v1/voices/puppetry.
-          example: puppetry-af_bella
-        text:
-          type: string
-          minLength: 1
-          maxLength: 5000
-          description: Text to synthesize.
-          example: Hello from Puppetry.
-        speed:
-          type: number
-          minimum: 0.5
-          maximum: 2
-          default: 1
-          description: Speech speed multiplier.
-      additionalProperties: false
+        type: string
+        format: date-time
+        example: '2026-06-22T08:50:30.000Z'
   securitySchemes:
     developerApiKey:
       type: http

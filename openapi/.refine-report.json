@@ -1,11 +1,7 @@
 {
   "provider": "elbo-ai-inc",
   "sources": [
-    "elbo-ai-inc-audio-uploads-api-openapi.yml",
-    "elbo-ai-inc-text-to-speech-api-openapi.yml",
-    "elbo-ai-inc-usage-api-openapi.yml",
-    "elbo-ai-inc-videos-api-openapi.yml",
-    "elbo-ai-inc-voices-api-openapi.yml"
+    "_original/elbo-ai-inc-puppetry-openapi-original.json"
   ],
   "outputs": [
     "elbo-ai-inc-audio-uploads-api-openapi.yml",
@@ -17,6 +13,21 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "elbo-ai-inc-puppetry-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "elbo-ai-inc-puppetry-openapi-original.json: declared missing tag: Audio Uploads",
+    "elbo-ai-inc-puppetry-openapi-original.json: declared missing tag: Text to Speech",
+    "elbo-ai-inc-puppetry-openapi-original.json: declared missing tag: Usage",
+    "elbo-ai-inc-puppetry-openapi-original.json: declared missing tag: Videos",
+    "elbo-ai-inc-puppetry-openapi-original.json: declared missing tag: Voices",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "elbo-ai-inc-audio-uploads-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "elbo-ai-inc-text-to-speech-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "elbo-ai-inc-usage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "elbo-ai-inc-videos-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "elbo-ai-inc-voices-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

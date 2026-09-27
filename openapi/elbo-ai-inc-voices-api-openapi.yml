@@ -49,7 +49,197 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
+  responses:
+    Unauthorized:
+      description: Missing, malformed, invalid, or revoked API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unauthorized:
+              value:
+                error: unauthorized
+                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
+    Forbidden:
+      description: The API key does not include the required endpoint scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            forbidden:
+              value:
+                error: forbidden
+                message: This API key does not have the required scope
+    RateLimited:
+      description: Rate limit or monthly beta quota exceeded
+      headers:
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            rateLimited:
+              value:
+                error: rate_limited
+                message: 'Developer API beta limit exceeded: 10 requests per minute.'
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+            voiceCharacterLimit:
+              value:
+                error: voice_character_limit_exceeded
+                message: Monthly Puppetry Voice character limit exceeded
+                details:
+                  retryable: true
+                  retry_after_seconds: 86400
+                  retryAfter: 86400
+                  retryAfterSeconds: 86400
+            concurrentVideoJobLimit:
+              value:
+                error: concurrent_job_limit_exceeded
+                message: Developer API concurrent job limit exceeded
+                details:
+                  retryable: true
+                  concurrent_jobs: 2
+                  concurrentJobs: 2
+                  active_jobs: 2
+                  activeJobs: 2
+                  available_slots: 0
+                  availableSlots: 0
+                  active_job_expires_in_seconds: 512
+                  activeJobExpiresInSeconds: 512
+                  retry_after_seconds: 512
+                  retryAfter: 512
+                  retryAfterSeconds: 512
+  headers:
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+        example: 10
+    RateLimitRemaining:
+      description: Requests remaining in the current one-minute window.
+      schema:
+        type: integer
+        example: 9
+    RateLimitReset:
+      description: Unix timestamp, in seconds, when the current rate-limit window resets.
+      schema:
+        type: integer
+        example: 1778520000
+    RetryAfter:
+      description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
+      schema:
+        type: integer
+        example: 30
   schemas:
+    VoiceListResponse:
+      type: object
+      required:
+      - object
+      - data
+      properties:
+        object:
+          type: string
+          const: list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PuppetryVoice'
+      additionalProperties: false
+    VideoJobCreationCredits:
+      type: object
+      required:
+      - charged
+      - remaining_after_debit
+      properties:
+        charged:
+          type: integer
+          minimum: 0
+          example: 1
+          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
+        remaining_after_debit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
+        remainingAfterDebit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: SDK-style alias for remaining_after_debit.
+      additionalProperties: false
+    PuppetryVoice:
+      type: object
+      required:
+      - id
+      - object
+      - name
+      - provider
+      - language
+      - language_code
+      - gender
+      - description
+      - styles
+      - preview_url
+      properties:
+        id:
+          type: string
+          description: Public Puppetry voice ID.
+          example: puppetry-af_bella
+        object:
+          type: string
+          const: voice
+        name:
+          type: string
+          example: Bella
+        provider:
+          type: string
+          const: puppetry
+        language:
+          type: string
+          example: English
+        language_code:
+          type: string
+          example: en
+        gender:
+          type: string
+          example: Female
+        description:
+          type: string
+          example: Puppetry voice (English)
+        styles:
+          type: array
+          items:
+            type: string
+        preview_url:
+          type: string
+          format: uri-reference
+          description: Fixed audio preview path for this Puppetry voice.
+          example: /api/voices/puppetry-preview?voice=af_bella&language=en
+      additionalProperties: false
     ErrorResponse:
       type: object
       required:
@@ -190,196 +380,6 @@ components:
           type: string
           description: SDK-style alias for content_location.
       additionalProperties: true
-    VideoJobCreationCredits:
-      type: object
-      required:
-      - charged
-      - remaining_after_debit
-      properties:
-        charged:
-          type: integer
-          minimum: 0
-          example: 1
-          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
-        remaining_after_debit:
-          type: integer
-          nullable: true
-          minimum: 0
-          example: 299
-          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
-        remainingAfterDebit:
-          type: integer
-          nullable: true
-          minimum: 0
-          example: 299
-          description: SDK-style alias for remaining_after_debit.
-      additionalProperties: false
-    PuppetryVoice:
-      type: object
-      required:
-      - id
-      - object
-      - name
-      - provider
-      - language
-      - language_code
-      - gender
-      - description
-      - styles
-      - preview_url
-      properties:
-        id:
-          type: string
-          description: Public Puppetry voice ID.
-          example: puppetry-af_bella
-        object:
-          type: string
-          const: voice
-        name:
-          type: string
-          example: Bella
-        provider:
-          type: string
-          const: puppetry
-        language:
-          type: string
-          example: English
-        language_code:
-          type: string
-          example: en
-        gender:
-          type: string
-          example: Female
-        description:
-          type: string
-          example: Puppetry voice (English)
-        styles:
-          type: array
-          items:
-            type: string
-        preview_url:
-          type: string
-          format: uri-reference
-          description: Fixed audio preview path for this Puppetry voice.
-          example: /api/voices/puppetry-preview?voice=af_bella&language=en
-      additionalProperties: false
-    VoiceListResponse:
-      type: object
-      required:
-      - object
-      - data
-      properties:
-        object:
-          type: string
-          const: list
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PuppetryVoice'
-      additionalProperties: false
-  responses:
-    Unauthorized:
-      description: Missing, malformed, invalid, or revoked API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            unauthorized:
-              value:
-                error: unauthorized
-                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
-    Forbidden:
-      description: The API key does not include the required endpoint scope.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            forbidden:
-              value:
-                error: forbidden
-                message: This API key does not have the required scope
-    RateLimited:
-      description: Rate limit or monthly beta quota exceeded
-      headers:
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        X-RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            rateLimited:
-              value:
-                error: rate_limited
-                message: 'Developer API beta limit exceeded: 10 requests per minute.'
-                retryable: true
-                retry_after_seconds: 30
-                retryAfter: 30
-                retryAfterSeconds: 30
-                next_poll_at: '2026-06-22T08:50:30.000Z'
-                nextPollAt: '2026-06-22T08:50:30.000Z'
-                details:
-                  retryable: true
-                  retry_after_seconds: 30
-                  retryAfter: 30
-                  retryAfterSeconds: 30
-                  next_poll_at: '2026-06-22T08:50:30.000Z'
-                  nextPollAt: '2026-06-22T08:50:30.000Z'
-            voiceCharacterLimit:
-              value:
-                error: voice_character_limit_exceeded
-                message: Monthly Puppetry Voice character limit exceeded
-                details:
-                  retryable: true
-                  retry_after_seconds: 86400
-                  retryAfter: 86400
-                  retryAfterSeconds: 86400
-            concurrentVideoJobLimit:
-              value:
-                error: concurrent_job_limit_exceeded
-                message: Developer API concurrent job limit exceeded
-                details:
-                  retryable: true
-                  concurrent_jobs: 2
-                  concurrentJobs: 2
-                  active_jobs: 2
-                  activeJobs: 2
-                  available_slots: 0
-                  availableSlots: 0
-                  active_job_expires_in_seconds: 512
-                  activeJobExpiresInSeconds: 512
-                  retry_after_seconds: 512
-                  retryAfter: 512
-                  retryAfterSeconds: 512
-  headers:
-    RetryAfter:
-      description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
-      schema:
-        type: integer
-        example: 30
-    RateLimitLimit:
-      description: Requests allowed in the current one-minute window.
-      schema:
-        type: integer
-        example: 10
-    RateLimitRemaining:
-      description: Requests remaining in the current one-minute window.
-      schema:
-        type: integer
-        example: 9
-    RateLimitReset:
-      description: Unix timestamp, in seconds, when the current rate-limit window resets.
-      schema:
-        type: integer
-        example: 1778520000
   securitySchemes:
     developerApiKey:
       type: http

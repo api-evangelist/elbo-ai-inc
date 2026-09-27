@@ -1,5 +1,5 @@
 aid: elbo-ai-inc
-name: ELBO AI, INC
+name: Puppetry
 description: >-
   ELBO AI, INC operates Puppetry (puppetry.com), an AI video-creation platform that
   turns any portrait photo into a realistic lip-synced talking-head video. Users upload
@@ -220,3 +220,4 @@ x-enrichment:
   status: backfilled
   pass: local-v1
   note: backfilled from .gitignore signal + verified work evidence
+x-legal-name: ELBO AI, INC

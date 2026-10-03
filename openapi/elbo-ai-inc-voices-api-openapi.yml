@@ -132,26 +132,26 @@ components:
                   retryAfter: 512
                   retryAfterSeconds: 512
   headers:
-    RateLimitLimit:
-      description: Requests allowed in the current one-minute window.
-      schema:
-        type: integer
-        example: 10
-    RateLimitRemaining:
-      description: Requests remaining in the current one-minute window.
-      schema:
-        type: integer
-        example: 9
-    RateLimitReset:
-      description: Unix timestamp, in seconds, when the current rate-limit window resets.
-      schema:
-        type: integer
-        example: 1778520000
     RetryAfter:
       description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
       schema:
         type: integer
         example: 30
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+        example: 10
+    RateLimitReset:
+      description: Unix timestamp, in seconds, when the current rate-limit window resets.
+      schema:
+        type: integer
+        example: 1778520000
+    RateLimitRemaining:
+      description: Requests remaining in the current one-minute window.
+      schema:
+        type: integer
+        example: 9
   schemas:
     VoiceListResponse:
       type: object
@@ -190,55 +190,6 @@ components:
           minimum: 0
           example: 299
           description: SDK-style alias for remaining_after_debit.
-      additionalProperties: false
-    PuppetryVoice:
-      type: object
-      required:
-      - id
-      - object
-      - name
-      - provider
-      - language
-      - language_code
-      - gender
-      - description
-      - styles
-      - preview_url
-      properties:
-        id:
-          type: string
-          description: Public Puppetry voice ID.
-          example: puppetry-af_bella
-        object:
-          type: string
-          const: voice
-        name:
-          type: string
-          example: Bella
-        provider:
-          type: string
-          const: puppetry
-        language:
-          type: string
-          example: English
-        language_code:
-          type: string
-          example: en
-        gender:
-          type: string
-          example: Female
-        description:
-          type: string
-          example: Puppetry voice (English)
-        styles:
-          type: array
-          items:
-            type: string
-        preview_url:
-          type: string
-          format: uri-reference
-          description: Fixed audio preview path for this Puppetry voice.
-          example: /api/voices/puppetry-preview?voice=af_bella&language=en
       additionalProperties: false
     ErrorResponse:
       type: object
@@ -380,6 +331,55 @@ components:
           type: string
           description: SDK-style alias for content_location.
       additionalProperties: true
+    PuppetryVoice:
+      type: object
+      required:
+      - id
+      - object
+      - name
+      - provider
+      - language
+      - language_code
+      - gender
+      - description
+      - styles
+      - preview_url
+      properties:
+        id:
+          type: string
+          description: Public Puppetry voice ID.
+          example: puppetry-af_bella
+        object:
+          type: string
+          const: voice
+        name:
+          type: string
+          example: Bella
+        provider:
+          type: string
+          const: puppetry
+        language:
+          type: string
+          example: English
+        language_code:
+          type: string
+          example: en
+        gender:
+          type: string
+          example: Female
+        description:
+          type: string
+          example: Puppetry voice (English)
+        styles:
+          type: array
+          items:
+            type: string
+        preview_url:
+          type: string
+          format: uri-reference
+          description: Fixed audio preview path for this Puppetry voice.
+          example: /api/voices/puppetry-preview?voice=af_bella&language=en
+      additionalProperties: false
   securitySchemes:
     developerApiKey:
       type: http

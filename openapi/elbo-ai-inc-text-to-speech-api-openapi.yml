@@ -91,6 +91,133 @@ components:
               value:
                 error: unauthorized
                 message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
+    InvalidRequest:
+      description: Invalid request body or unsupported input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            hostedAudioUploadUnavailable:
+              value:
+                error: hosted_audio_upload_unavailable
+                message: Hosted audio upload ownership is temporarily unavailable
+                details:
+                  retry_after_seconds: 217
+                  retryAfter: 217
+                  retryAfterSeconds: 217
+            hostedAudioUploadNotFound:
+              value:
+                error: invalid_request
+                message: audio_url must reference a hosted API audio upload owned by this API key
+                details:
+                  retryable: false
+                  retry_blocked_reason: audio_url must reference a hosted API audio upload owned by this API key
+                  retryBlockedReason: audio_url must reference a hosted API audio upload owned by this API key
+                  retry_block_code: HOSTED_AUDIO_UPLOAD_NOT_FOUND
+                  retryBlockCode: HOSTED_AUDIO_UPLOAD_NOT_FOUND
+            hostedAudioUploadPending:
+              value:
+                error: invalid_request
+                message: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                details:
+                  retryable: false
+                  retry_blocked_reason: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                  retryBlockedReason: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                  retry_block_code: HOSTED_AUDIO_UPLOAD_PENDING
+                  retryBlockCode: HOSTED_AUDIO_UPLOAD_PENDING
+            invalidImage:
+              value:
+                error: invalid_image
+                message: image_url must be a supported image
+                details:
+                  retryable: false
+                  retry_blocked_reason: image_url must be a supported image
+                  retryBlockedReason: image_url must be a supported image
+                  retry_block_code: INVALID_VIDEO_IMAGE
+                  retryBlockCode: INVALID_VIDEO_IMAGE
+            audioTooLong:
+              value:
+                error: audio_too_long
+                message: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                details:
+                  duration_seconds: 529.42
+                  max_duration_seconds: 300
+                  retryable: false
+                  retry_blocked_reason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                  retryBlockedReason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                  retry_block_code: VIDEO_CREATE_AUDIO_TOO_LONG
+                  retryBlockCode: VIDEO_CREATE_AUDIO_TOO_LONG
+    RateLimited:
+      description: Rate limit or monthly beta quota exceeded
+      headers:
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            rateLimited:
+              value:
+                error: rate_limited
+                message: 'Developer API beta limit exceeded: 10 requests per minute.'
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+            voiceCharacterLimit:
+              value:
+                error: voice_character_limit_exceeded
+                message: Monthly Puppetry Voice character limit exceeded
+                details:
+                  retryable: true
+                  retry_after_seconds: 86400
+                  retryAfter: 86400
+                  retryAfterSeconds: 86400
+            concurrentVideoJobLimit:
+              value:
+                error: concurrent_job_limit_exceeded
+                message: Developer API concurrent job limit exceeded
+                details:
+                  retryable: true
+                  concurrent_jobs: 2
+                  concurrentJobs: 2
+                  active_jobs: 2
+                  activeJobs: 2
+                  available_slots: 0
+                  availableSlots: 0
+                  active_job_expires_in_seconds: 512
+                  activeJobExpiresInSeconds: 512
+                  retry_after_seconds: 512
+                  retryAfter: 512
+                  retryAfterSeconds: 512
+    Forbidden:
+      description: The API key does not include the required endpoint scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            forbidden:
+              value:
+                error: forbidden
+                message: This API key does not have the required scope
     TemporarilyUnavailable:
       description: A beta quota, usage lookup, or job counter is temporarily unavailable.
       headers:
@@ -316,185 +443,7 @@ components:
                   createdAt: '2026-06-22T08:50:00.000Z'
                   content_location: /api/v1/videos/api_video_abc123
                   contentLocation: /api/v1/videos/api_video_abc123
-    InvalidRequest:
-      description: Invalid request body or unsupported input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            hostedAudioUploadUnavailable:
-              value:
-                error: hosted_audio_upload_unavailable
-                message: Hosted audio upload ownership is temporarily unavailable
-                details:
-                  retry_after_seconds: 217
-                  retryAfter: 217
-                  retryAfterSeconds: 217
-            hostedAudioUploadNotFound:
-              value:
-                error: invalid_request
-                message: audio_url must reference a hosted API audio upload owned by this API key
-                details:
-                  retryable: false
-                  retry_blocked_reason: audio_url must reference a hosted API audio upload owned by this API key
-                  retryBlockedReason: audio_url must reference a hosted API audio upload owned by this API key
-                  retry_block_code: HOSTED_AUDIO_UPLOAD_NOT_FOUND
-                  retryBlockCode: HOSTED_AUDIO_UPLOAD_NOT_FOUND
-            hostedAudioUploadPending:
-              value:
-                error: invalid_request
-                message: audio_url hosted upload has not finished uploading; upload the file before creating a video
-                details:
-                  retryable: false
-                  retry_blocked_reason: audio_url hosted upload has not finished uploading; upload the file before creating a video
-                  retryBlockedReason: audio_url hosted upload has not finished uploading; upload the file before creating a video
-                  retry_block_code: HOSTED_AUDIO_UPLOAD_PENDING
-                  retryBlockCode: HOSTED_AUDIO_UPLOAD_PENDING
-            invalidImage:
-              value:
-                error: invalid_image
-                message: image_url must be a supported image
-                details:
-                  retryable: false
-                  retry_blocked_reason: image_url must be a supported image
-                  retryBlockedReason: image_url must be a supported image
-                  retry_block_code: INVALID_VIDEO_IMAGE
-                  retryBlockCode: INVALID_VIDEO_IMAGE
-            audioTooLong:
-              value:
-                error: audio_too_long
-                message: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
-                details:
-                  duration_seconds: 529.42
-                  max_duration_seconds: 300
-                  retryable: false
-                  retry_blocked_reason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
-                  retryBlockedReason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
-                  retry_block_code: VIDEO_CREATE_AUDIO_TOO_LONG
-                  retryBlockCode: VIDEO_CREATE_AUDIO_TOO_LONG
-    Forbidden:
-      description: The API key does not include the required endpoint scope.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            forbidden:
-              value:
-                error: forbidden
-                message: This API key does not have the required scope
-    RateLimited:
-      description: Rate limit or monthly beta quota exceeded
-      headers:
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        X-RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            rateLimited:
-              value:
-                error: rate_limited
-                message: 'Developer API beta limit exceeded: 10 requests per minute.'
-                retryable: true
-                retry_after_seconds: 30
-                retryAfter: 30
-                retryAfterSeconds: 30
-                next_poll_at: '2026-06-22T08:50:30.000Z'
-                nextPollAt: '2026-06-22T08:50:30.000Z'
-                details:
-                  retryable: true
-                  retry_after_seconds: 30
-                  retryAfter: 30
-                  retryAfterSeconds: 30
-                  next_poll_at: '2026-06-22T08:50:30.000Z'
-                  nextPollAt: '2026-06-22T08:50:30.000Z'
-            voiceCharacterLimit:
-              value:
-                error: voice_character_limit_exceeded
-                message: Monthly Puppetry Voice character limit exceeded
-                details:
-                  retryable: true
-                  retry_after_seconds: 86400
-                  retryAfter: 86400
-                  retryAfterSeconds: 86400
-            concurrentVideoJobLimit:
-              value:
-                error: concurrent_job_limit_exceeded
-                message: Developer API concurrent job limit exceeded
-                details:
-                  retryable: true
-                  concurrent_jobs: 2
-                  concurrentJobs: 2
-                  active_jobs: 2
-                  activeJobs: 2
-                  available_slots: 0
-                  availableSlots: 0
-                  active_job_expires_in_seconds: 512
-                  activeJobExpiresInSeconds: 512
-                  retry_after_seconds: 512
-                  retryAfter: 512
-                  retryAfterSeconds: 512
-  headers:
-    RateLimitLimit:
-      description: Requests allowed in the current one-minute window.
-      schema:
-        type: integer
-        example: 10
-    RateLimitRemaining:
-      description: Requests remaining in the current one-minute window.
-      schema:
-        type: integer
-        example: 9
-    NextPollAt:
-      description: Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.
-      schema:
-        type: string
-        format: date-time
-        example: '2026-06-22T08:50:30.000Z'
-    RateLimitReset:
-      description: Unix timestamp, in seconds, when the current rate-limit window resets.
-      schema:
-        type: integer
-        example: 1778520000
-    RetryAfter:
-      description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
-      schema:
-        type: integer
-        example: 30
   schemas:
-    VideoJobCreationCredits:
-      type: object
-      required:
-      - charged
-      - remaining_after_debit
-      properties:
-        charged:
-          type: integer
-          minimum: 0
-          example: 1
-          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
-        remaining_after_debit:
-          type: integer
-          nullable: true
-          minimum: 0
-          example: 299
-          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
-        remainingAfterDebit:
-          type: integer
-          nullable: true
-          minimum: 0
-          example: 299
-          description: SDK-style alias for remaining_after_debit.
-      additionalProperties: false
     TtsResponse:
       type: object
       required:
@@ -545,28 +494,29 @@ components:
               additionalProperties: false
           additionalProperties: false
       additionalProperties: false
-    TtsRequest:
+    VideoJobCreationCredits:
       type: object
       required:
-      - voice_id
-      - text
+      - charged
+      - remaining_after_debit
       properties:
-        voice_id:
-          type: string
-          description: Public voice ID from GET /api/v1/voices/puppetry.
-          example: puppetry-af_bella
-        text:
-          type: string
-          minLength: 1
-          maxLength: 5000
-          description: Text to synthesize.
-          example: Hello from Puppetry.
-        speed:
-          type: number
-          minimum: 0.5
-          maximum: 2
-          default: 1
-          description: Speech speed multiplier.
+        charged:
+          type: integer
+          minimum: 0
+          example: 1
+          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
+        remaining_after_debit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
+        remainingAfterDebit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: SDK-style alias for remaining_after_debit.
       additionalProperties: false
     ErrorResponse:
       type: object
@@ -708,6 +658,56 @@ components:
           type: string
           description: SDK-style alias for content_location.
       additionalProperties: true
+    TtsRequest:
+      type: object
+      required:
+      - voice_id
+      - text
+      properties:
+        voice_id:
+          type: string
+          description: Public voice ID from GET /api/v1/voices/puppetry.
+          example: puppetry-af_bella
+        text:
+          type: string
+          minLength: 1
+          maxLength: 5000
+          description: Text to synthesize.
+          example: Hello from Puppetry.
+        speed:
+          type: number
+          minimum: 0.5
+          maximum: 2
+          default: 1
+          description: Speech speed multiplier.
+      additionalProperties: false
+  headers:
+    RetryAfter:
+      description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
+      schema:
+        type: integer
+        example: 30
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+        example: 10
+    RateLimitReset:
+      description: Unix timestamp, in seconds, when the current rate-limit window resets.
+      schema:
+        type: integer
+        example: 1778520000
+    NextPollAt:
+      description: Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.
+      schema:
+        type: string
+        format: date-time
+        example: '2026-06-22T08:50:30.000Z'
+    RateLimitRemaining:
+      description: Requests remaining in the current one-minute window.
+      schema:
+        type: integer
+        example: 9
   securitySchemes:
     developerApiKey:
       type: http

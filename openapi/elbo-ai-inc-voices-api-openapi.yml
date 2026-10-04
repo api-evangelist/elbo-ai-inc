@@ -49,94 +49,17 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  responses:
-    Unauthorized:
-      description: Missing, malformed, invalid, or revoked API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            unauthorized:
-              value:
-                error: unauthorized
-                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
-    Forbidden:
-      description: The API key does not include the required endpoint scope.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            forbidden:
-              value:
-                error: forbidden
-                message: This API key does not have the required scope
-    RateLimited:
-      description: Rate limit or monthly beta quota exceeded
-      headers:
-        X-RateLimit-Limit:
-          $ref: '#/components/headers/RateLimitLimit'
-        X-RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimitRemaining'
-        X-RateLimit-Reset:
-          $ref: '#/components/headers/RateLimitReset'
-        Retry-After:
-          $ref: '#/components/headers/RetryAfter'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            rateLimited:
-              value:
-                error: rate_limited
-                message: 'Developer API beta limit exceeded: 10 requests per minute.'
-                retryable: true
-                retry_after_seconds: 30
-                retryAfter: 30
-                retryAfterSeconds: 30
-                next_poll_at: '2026-06-22T08:50:30.000Z'
-                nextPollAt: '2026-06-22T08:50:30.000Z'
-                details:
-                  retryable: true
-                  retry_after_seconds: 30
-                  retryAfter: 30
-                  retryAfterSeconds: 30
-                  next_poll_at: '2026-06-22T08:50:30.000Z'
-                  nextPollAt: '2026-06-22T08:50:30.000Z'
-            voiceCharacterLimit:
-              value:
-                error: voice_character_limit_exceeded
-                message: Monthly Puppetry Voice character limit exceeded
-                details:
-                  retryable: true
-                  retry_after_seconds: 86400
-                  retryAfter: 86400
-                  retryAfterSeconds: 86400
-            concurrentVideoJobLimit:
-              value:
-                error: concurrent_job_limit_exceeded
-                message: Developer API concurrent job limit exceeded
-                details:
-                  retryable: true
-                  concurrent_jobs: 2
-                  concurrentJobs: 2
-                  active_jobs: 2
-                  activeJobs: 2
-                  available_slots: 0
-                  availableSlots: 0
-                  active_job_expires_in_seconds: 512
-                  activeJobExpiresInSeconds: 512
-                  retry_after_seconds: 512
-                  retryAfter: 512
-                  retryAfterSeconds: 512
   headers:
     RetryAfter:
       description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
       schema:
         type: integer
         example: 30
+    RateLimitRemaining:
+      description: Requests remaining in the current one-minute window.
+      schema:
+        type: integer
+        example: 9
     RateLimitLimit:
       description: Requests allowed in the current one-minute window.
       schema:
@@ -147,26 +70,7 @@ components:
       schema:
         type: integer
         example: 1778520000
-    RateLimitRemaining:
-      description: Requests remaining in the current one-minute window.
-      schema:
-        type: integer
-        example: 9
   schemas:
-    VoiceListResponse:
-      type: object
-      required:
-      - object
-      - data
-      properties:
-        object:
-          type: string
-          const: list
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PuppetryVoice'
-      additionalProperties: false
     VideoJobCreationCredits:
       type: object
       required:
@@ -331,6 +235,20 @@ components:
           type: string
           description: SDK-style alias for content_location.
       additionalProperties: true
+    VoiceListResponse:
+      type: object
+      required:
+      - object
+      - data
+      properties:
+        object:
+          type: string
+          const: list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PuppetryVoice'
+      additionalProperties: false
     PuppetryVoice:
       type: object
       required:
@@ -380,6 +298,88 @@ components:
           description: Fixed audio preview path for this Puppetry voice.
           example: /api/voices/puppetry-preview?voice=af_bella&language=en
       additionalProperties: false
+  responses:
+    Forbidden:
+      description: The API key does not include the required endpoint scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            forbidden:
+              value:
+                error: forbidden
+                message: This API key does not have the required scope
+    Unauthorized:
+      description: Missing, malformed, invalid, or revoked API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unauthorized:
+              value:
+                error: unauthorized
+                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
+    RateLimited:
+      description: Rate limit or monthly beta quota exceeded
+      headers:
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            rateLimited:
+              value:
+                error: rate_limited
+                message: 'Developer API beta limit exceeded: 10 requests per minute.'
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+            voiceCharacterLimit:
+              value:
+                error: voice_character_limit_exceeded
+                message: Monthly Puppetry Voice character limit exceeded
+                details:
+                  retryable: true
+                  retry_after_seconds: 86400
+                  retryAfter: 86400
+                  retryAfterSeconds: 86400
+            concurrentVideoJobLimit:
+              value:
+                error: concurrent_job_limit_exceeded
+                message: Developer API concurrent job limit exceeded
+                details:
+                  retryable: true
+                  concurrent_jobs: 2
+                  concurrentJobs: 2
+                  active_jobs: 2
+                  activeJobs: 2
+                  available_slots: 0
+                  availableSlots: 0
+                  active_job_expires_in_seconds: 512
+                  activeJobExpiresInSeconds: 512
+                  retry_after_seconds: 512
+                  retryAfter: 512
+                  retryAfterSeconds: 512
   securitySchemes:
     developerApiKey:
       type: http

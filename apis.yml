@@ -152,6 +152,16 @@ apis:
     url: https://www.puppetry.com/developer
   - type: Documentation
     url: https://www.puppetry.com/for-agents
+- aid: elbo-ai-inc:elbo-ai-inc-puppets-api
+  name: Puppetry Puppets API
+  description: The Puppets API from Puppetry — 2 operation(s) for puppets.
+  humanURL: https://www.puppetry.com/developer
+  baseURL: https://www.puppetry.com/api/v1
+  tags:
+  - Puppets
+  properties:
+  - type: OpenAPI
+    url: openapi/elbo-ai-inc-puppets-api-openapi.yml
 common:
 - type: Overlay
   url: overlays/elbo-ai-inc-puppetry-overlay.yaml

@@ -1,0 +1,654 @@
+openapi: 3.2.0
+info:
+  title: Puppetry Developer API Beta Puppets API
+  description: Live Puppetry Developer API beta for Puppetry Voice API access, saved puppet libraries, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.
+  version: '2026-05-11'
+  contact:
+    name: Puppetry Support
+    url: https://www.puppetry.com
+    email: support@puppetry.com
+  termsOfService: https://www.puppetry.com/tos
+  license:
+    name: Proprietary
+servers:
+- url: https://www.puppetry.com
+  description: Production
+security:
+- developerApiKey: []
+tags:
+- name: Puppets
+paths:
+  /api/v1/puppets:
+    get:
+      operationId: listPuppets
+      x-openai-isConsequential: false
+      summary: List saved puppets
+      description: Returns the authenticated workspace's saved puppet library for use with Developer API video creation. Requires the videos:read scope.
+      tags:
+      - Puppets
+      security:
+      - developerApiKey: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: cursor
+        in: query
+        required: false
+        description: Puppet ID returned as nextCursor by the previous page.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Saved workspace puppets
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/RateLimitLimit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/RateLimitRemaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/RateLimitReset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PuppetListResponse'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/TemporarilyUnavailable'
+    post:
+      operationId: createPuppet
+      x-openai-isConsequential: true
+      summary: Save a puppet
+      description: Saves a reachable public portrait image in the authenticated workspace puppet library. Send an Idempotency-Key so a lost response or SDK retry returns the same saved puppet instead of creating a duplicate asset. Reusing the key with different input returns 409. Requires the videos:create scope.
+      tags:
+      - Puppets
+      security:
+      - developerApiKey: []
+      parameters:
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePuppetRequest'
+      responses:
+        '200':
+          description: Existing saved puppet returned from an Idempotency-Key replay without creating another library asset.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Puppet'
+        '201':
+          description: Puppet saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Puppet'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: The Idempotency-Key was already used with different puppet input.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: idempotency_key_conflict
+                message: Idempotency-Key was already used with a different puppet create request
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/TemporarilyUnavailable'
+  /api/v1/puppets/{puppetId}:
+    get:
+      operationId: getPuppet
+      x-openai-isConsequential: false
+      summary: Get a saved puppet
+      description: Returns one saved puppet from the authenticated workspace. Requires the videos:read scope.
+      tags:
+      - Puppets
+      security:
+      - developerApiKey: []
+      parameters:
+      - name: puppetId
+        in: path
+        required: true
+        description: Puppet ID returned by GET /api/v1/puppets.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Saved workspace puppet
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/RateLimitLimit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/RateLimitRemaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/RateLimitReset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Puppet'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Puppet not found in this workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/TemporarilyUnavailable'
+    delete:
+      operationId: deletePuppet
+      x-openai-isConsequential: true
+      summary: Delete a saved puppet
+      description: Permanently removes one saved puppet from the authenticated workspace. Requires the videos:create scope.
+      tags:
+      - Puppets
+      security:
+      - developerApiKey: []
+      parameters:
+      - name: puppetId
+        in: path
+        required: true
+        description: Puppet ID returned by GET /api/v1/puppets.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Puppet deleted
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Puppet not found in this workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/TemporarilyUnavailable'
+components:
+  headers:
+    RetryAfter:
+      description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
+      schema:
+        type: integer
+        example: 30
+    NextPollAt:
+      description: Absolute UTC retry or poll time. Mirrors next_poll_at/nextPollAt in the JSON body.
+      schema:
+        type: string
+        format: date-time
+        example: '2026-06-22T08:50:30.000Z'
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+        example: 10
+    RateLimitRemaining:
+      description: Requests remaining in the current one-minute window.
+      schema:
+        type: integer
+        example: 9
+    RateLimitReset:
+      description: Unix timestamp, in seconds, when the current rate-limit window resets.
+      schema:
+        type: integer
+        example: 1778520000
+  responses:
+    Forbidden:
+      description: The API key does not include the required endpoint scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            forbidden:
+              value:
+                error: forbidden
+                message: This API key does not have the required scope
+    RateLimited:
+      description: Rate limit or monthly beta quota exceeded
+      headers:
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            rateLimited:
+              value:
+                error: rate_limited
+                message: 'Developer API beta limit exceeded: 10 requests per minute.'
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+            voiceCharacterLimit:
+              value:
+                error: voice_character_limit_exceeded
+                message: Monthly Puppetry Voice character limit exceeded
+                details:
+                  retryable: true
+                  retry_after_seconds: 86400
+                  retryAfter: 86400
+                  retryAfterSeconds: 86400
+            concurrentVideoJobLimit:
+              value:
+                error: concurrent_job_limit_exceeded
+                message: Developer API concurrent job limit exceeded
+                details:
+                  retryable: true
+                  concurrent_jobs: 2
+                  concurrentJobs: 2
+                  active_jobs: 2
+                  activeJobs: 2
+                  available_slots: 0
+                  availableSlots: 0
+                  active_job_expires_in_seconds: 512
+                  activeJobExpiresInSeconds: 512
+                  retry_after_seconds: 512
+                  retryAfter: 512
+                  retryAfterSeconds: 512
+    InvalidRequest:
+      description: Invalid request body or unsupported input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            hostedAudioUploadUnavailable:
+              value:
+                error: hosted_audio_upload_unavailable
+                message: Hosted audio upload ownership is temporarily unavailable
+                details:
+                  retry_after_seconds: 217
+                  retryAfter: 217
+                  retryAfterSeconds: 217
+            hostedAudioUploadNotFound:
+              value:
+                error: invalid_request
+                message: audio_url must reference a hosted API audio upload owned by this API key
+                details:
+                  retryable: false
+                  retry_blocked_reason: audio_url must reference a hosted API audio upload owned by this API key
+                  retryBlockedReason: audio_url must reference a hosted API audio upload owned by this API key
+                  retry_block_code: HOSTED_AUDIO_UPLOAD_NOT_FOUND
+                  retryBlockCode: HOSTED_AUDIO_UPLOAD_NOT_FOUND
+            hostedAudioUploadPending:
+              value:
+                error: invalid_request
+                message: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                details:
+                  retryable: false
+                  retry_blocked_reason: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                  retryBlockedReason: audio_url hosted upload has not finished uploading; upload the file before creating a video
+                  retry_block_code: HOSTED_AUDIO_UPLOAD_PENDING
+                  retryBlockCode: HOSTED_AUDIO_UPLOAD_PENDING
+            invalidImage:
+              value:
+                error: invalid_image
+                message: image_url must be a supported image
+                details:
+                  retryable: false
+                  retry_blocked_reason: image_url must be a supported image
+                  retryBlockedReason: image_url must be a supported image
+                  retry_block_code: INVALID_VIDEO_IMAGE
+                  retryBlockCode: INVALID_VIDEO_IMAGE
+            audioTooLong:
+              value:
+                error: audio_too_long
+                message: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                details:
+                  duration_seconds: 529.42
+                  max_duration_seconds: 300
+                  retryable: false
+                  retry_blocked_reason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                  retryBlockedReason: Audio is too long (529s). Maximum supported duration is 300 seconds (5 minutes). Please use a shorter script or split into multiple videos.
+                  retry_block_code: VIDEO_CREATE_AUDIO_TOO_LONG
+                  retryBlockCode: VIDEO_CREATE_AUDIO_TOO_LONG
+    TemporarilyUnavailable:
+      description: A beta quota, usage lookup, or job counter is temporarily unavailable.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+        X-Puppetry-Next-Poll-At:
+          $ref: '#/components/headers/NextPollAt'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            apiAuthUnavailable:
+              value:
+                error: api_auth_unavailable
+                message: Developer API authentication is temporarily unavailable
+                retryable: true
+                retry_after_seconds: 30
+                retryAfter: 30
+                retryAfterSeconds: 30
+                next_poll_at: '2026-06-22T08:50:30.000Z'
+                nextPollAt: '2026-06-22T08:50:30.000Z'
+                details:
+                  retryable: true
+                  retry_after_seconds: 30
+                  retryAfter: 30
+                  retryAfterSeconds: 30
+                  next_poll_at: '2026-06-22T08:50:30.000Z'
+                  nextPollAt: '2026-06-22T08:50:30.000Z'
+    Unauthorized:
+      description: Missing, malformed, invalid, or revoked API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            unauthorized:
+              value:
+                error: unauthorized
+                message: 'Missing or invalid Authorization header. Use: Bearer pk_live_...'
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      description: Optional non-blank retry key for video, saved-puppet, and hosted audio upload URL create requests. Keys are scoped to the authenticated workspace and endpoint. Replaying the same accepted request returns the original resource without charging another credit or creating duplicate assets; replaying the same pending hosted audio upload returns a fresh signed PUT URL without reserving duplicate quota. Reusing the key for different input returns 409.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 200
+        example: text-video-demo-1
+  schemas:
+    CreatePuppetRequest:
+      type: object
+      required:
+      - imageUrl
+      properties:
+        imageUrl:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Reachable public portrait image URL.
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+          description: Optional display name for the saved puppet.
+      additionalProperties: false
+    VideoJobCreationCredits:
+      type: object
+      required:
+      - charged
+      - remaining_after_debit
+      properties:
+        charged:
+          type: integer
+          minimum: 0
+          example: 1
+          description: Video credits charged when the Developer API video job was created. Historical jobs may omit creation_credits when this evidence was not recorded.
+        remaining_after_debit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: Workspace credit balance immediately after the original create debit, or null when unavailable.
+        remainingAfterDebit:
+          type: integer
+          nullable: true
+          minimum: 0
+          example: 299
+          description: SDK-style alias for remaining_after_debit.
+      additionalProperties: false
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          examples:
+          - invalid_request
+          - unauthorized
+          - rate_limited
+        message:
+          type: string
+        object:
+          type: string
+          const: video_job
+          description: Present on retryable transient video-status errors when the affected API video job is known.
+        id:
+          type: string
+          description: Present on retryable transient video-status errors. API video job ID to keep polling.
+        credits:
+          type: object
+          description: Present on retryable transient video-status errors for accepted API video jobs. Status polls are never billed, so charged is 0.
+          properties:
+            charged:
+              type: integer
+              minimum: 0
+              example: 0
+            remaining:
+              type:
+              - integer
+              - 'null'
+              minimum: 0
+              description: Current balance if available; null when the status poll did not fetch credit state.
+          additionalProperties: false
+        creation_credits:
+          $ref: '#/components/schemas/VideoJobCreationCredits'
+          description: Original create-time video credit debit evidence for the affected API video job when available.
+        creationCredits:
+          $ref: '#/components/schemas/VideoJobCreationCredits'
+          description: SDK-style alias for creation_credits.
+        retryable:
+          type: boolean
+          description: Present on retryable transient errors and non-retryable terminal video-create/status errors so generated clients can identify retry/backoff behavior without parsing details.
+        retry_blocked_reason:
+          type: string
+          description: Present on non-retryable terminal video-create/status errors. Redacted reason explaining why clients should not retry the same request.
+        retryBlockedReason:
+          type: string
+          description: SDK-style alias for retry_blocked_reason.
+        retry_block_code:
+          type: string
+          description: Present on non-retryable terminal video-create/status errors. Stable retry-block code suitable for generated clients.
+        retryBlockCode:
+          type: string
+          description: SDK-style alias for retry_block_code.
+        retry_after_seconds:
+          type: integer
+          minimum: 0
+          description: Present on retryable transient errors. Mirrors Retry-After and details.retry_after_seconds.
+        retryAfter:
+          type: integer
+          minimum: 0
+          description: SDK-style alias for retry_after_seconds.
+        retryAfterSeconds:
+          type: integer
+          minimum: 0
+          description: CamelCase alias for retry_after_seconds.
+        next_poll_at:
+          type: string
+          format: date-time
+          description: Present on retryable transient errors. Absolute UTC time when clients should retry the request or poll again.
+        nextPollAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for next_poll_at.
+        job_id:
+          type: string
+          description: Present on retryable transient video-status errors so clients can correlate the retry to the API video job.
+        jobId:
+          type: string
+          description: SDK-style alias for job_id.
+        task_id:
+          type: string
+          description: Task-style alias for job_id on retryable transient video-status errors.
+        taskId:
+          type: string
+          description: CamelCase task-style alias for job_id.
+        source:
+          type: string
+          enum:
+          - text
+          - audio
+          description: Video creation source for the affected API video job.
+        request_source:
+          type: string
+          enum:
+          - text
+          - audio
+          description: Alias for source.
+        requestSource:
+          type: string
+          enum:
+          - text
+          - audio
+          description: SDK-style alias for source.
+        status_url:
+          type: string
+          description: Present on retryable transient video-status errors so clients know which job resource to poll next.
+        statusUrl:
+          type: string
+          description: SDK-style alias for status_url.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation time for the affected API video job.
+        createdAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for created_at.
+        expires_at:
+          type: string
+          format: date-time
+          description: When the affected API video job record expires from status lookup.
+        expiresAt:
+          type: string
+          format: date-time
+          description: SDK-style alias for expires_at.
+        details:
+          description: Endpoint-specific diagnostic fields.
+          type: object
+          additionalProperties: true
+        content_location:
+          type: string
+          description: Body alias for the status poll URL, mirroring the Content-Location response header target for clients that cannot reliably read headers.
+        contentLocation:
+          type: string
+          description: SDK-style alias for content_location.
+      additionalProperties: true
+    Puppet:
+      type: object
+      required:
+      - id
+      - name
+      - imageUrl
+      - createdAt
+      properties:
+        id:
+          type: string
+          description: Workspace puppet ID.
+        name:
+          type: string
+          description: Display name for the puppet.
+        imageUrl:
+          type: string
+          format: uri
+          description: Hosted portrait image URL.
+        createdAt:
+          type: string
+          format: date-time
+        idempotent_replay:
+          type: boolean
+          const: true
+          description: Present and true when this puppet came from an Idempotency-Key replay.
+        idempotentReplay:
+          type: boolean
+          const: true
+          description: Camel-case alias of idempotent_replay.
+      additionalProperties: false
+    PuppetListResponse:
+      type: object
+      required:
+      - object
+      - data
+      - has_more
+      - hasMore
+      - next_cursor
+      - nextCursor
+      properties:
+        object:
+          type: string
+          const: list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Puppet'
+        has_more:
+          type: boolean
+        hasMore:
+          type: boolean
+        next_cursor:
+          type:
+          - string
+          - 'null'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+  securitySchemes:
+    developerApiKey:
+      type: http
+      scheme: bearer
+      bearerFormat: Puppetry API key
+      description: 'Use the Authorization header with a live Puppetry API key: Bearer pk_live_...'

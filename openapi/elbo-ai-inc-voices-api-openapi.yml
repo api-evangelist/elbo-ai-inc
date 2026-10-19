@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Puppetry Developer API Beta Voices API
-  description: Live Puppetry Developer API beta for Puppetry Voice API access, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.
+  description: Live Puppetry Developer API beta for Puppetry Voice API access, saved puppet libraries, hosted audio uploads, usage, and credit-backed text/audio-to-video jobs.
   version: '2026-05-11'
   contact:
     name: Puppetry Support
@@ -50,27 +50,38 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   headers:
-    RateLimitReset:
-      description: Unix timestamp, in seconds, when the current rate-limit window resets.
-      schema:
-        type: integer
-        example: 1778520000
-    RateLimitRemaining:
-      description: Requests remaining in the current one-minute window.
-      schema:
-        type: integer
-        example: 9
-    RateLimitLimit:
-      description: Requests allowed in the current one-minute window.
-      schema:
-        type: integer
-        example: 10
     RetryAfter:
       description: Seconds to wait before retrying a limited/transient request or polling a non-terminal video job again.
       schema:
         type: integer
         example: 30
+    RateLimitLimit:
+      description: Requests allowed in the current one-minute window.
+      schema:
+        type: integer
+        example: 10
+    RateLimitRemaining:
+      description: Requests remaining in the current one-minute window.
+      schema:
+        type: integer
+        example: 9
+    RateLimitReset:
+      description: Unix timestamp, in seconds, when the current rate-limit window resets.
+      schema:
+        type: integer
+        example: 1778520000
   responses:
+    Forbidden:
+      description: The API key does not include the required endpoint scope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            forbidden:
+              value:
+                error: forbidden
+                message: This API key does not have the required scope
     RateLimited:
       description: Rate limit or monthly beta quota exceeded
       headers:
@@ -130,17 +141,6 @@ components:
                   retry_after_seconds: 512
                   retryAfter: 512
                   retryAfterSeconds: 512
-    Forbidden:
-      description: The API key does not include the required endpoint scope.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            forbidden:
-              value:
-                error: forbidden
-                message: This API key does not have the required scope
     Unauthorized:
       description: Missing, malformed, invalid, or revoked API key
       content:
@@ -176,6 +176,69 @@ components:
           minimum: 0
           example: 299
           description: SDK-style alias for remaining_after_debit.
+      additionalProperties: false
+    VoiceListResponse:
+      type: object
+      required:
+      - object
+      - data
+      properties:
+        object:
+          type: string
+          const: list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PuppetryVoice'
+      additionalProperties: false
+    PuppetryVoice:
+      type: object
+      required:
+      - id
+      - object
+      - name
+      - provider
+      - language
+      - language_code
+      - gender
+      - description
+      - styles
+      - preview_url
+      properties:
+        id:
+          type: string
+          description: Public Puppetry voice ID.
+          example: puppetry-af_bella
+        object:
+          type: string
+          const: voice
+        name:
+          type: string
+          example: Bella
+        provider:
+          type: string
+          const: puppetry
+        language:
+          type: string
+          example: English
+        language_code:
+          type: string
+          example: en
+        gender:
+          type: string
+          example: Female
+        description:
+          type: string
+          example: Puppetry voice (English)
+        styles:
+          type: array
+          items:
+            type: string
+        preview_url:
+          type: string
+          format: uri-reference
+          description: Fixed audio preview path for this Puppetry voice.
+          example: /api/voices/puppetry-preview?voice=af_bella&language=en
       additionalProperties: false
     ErrorResponse:
       type: object
@@ -317,69 +380,6 @@ components:
           type: string
           description: SDK-style alias for content_location.
       additionalProperties: true
-    VoiceListResponse:
-      type: object
-      required:
-      - object
-      - data
-      properties:
-        object:
-          type: string
-          const: list
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PuppetryVoice'
-      additionalProperties: false
-    PuppetryVoice:
-      type: object
-      required:
-      - id
-      - object
-      - name
-      - provider
-      - language
-      - language_code
-      - gender
-      - description
-      - styles
-      - preview_url
-      properties:
-        id:
-          type: string
-          description: Public Puppetry voice ID.
-          example: puppetry-af_bella
-        object:
-          type: string
-          const: voice
-        name:
-          type: string
-          example: Bella
-        provider:
-          type: string
-          const: puppetry
-        language:
-          type: string
-          example: English
-        language_code:
-          type: string
-          example: en
-        gender:
-          type: string
-          example: Female
-        description:
-          type: string
-          example: Puppetry voice (English)
-        styles:
-          type: array
-          items:
-            type: string
-        preview_url:
-          type: string
-          format: uri-reference
-          description: Fixed audio preview path for this Puppetry voice.
-          example: /api/voices/puppetry-preview?voice=af_bella&language=en
-      additionalProperties: false
   securitySchemes:
     developerApiKey:
       type: http

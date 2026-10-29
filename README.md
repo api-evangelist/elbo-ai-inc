@@ -1,4 +1,4 @@
-# ELBO AI, INC
+# Puppetry
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,6 +64,128 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-ELBO AI, INC is a company surfaced as a portfolio company of 500-global and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+ELBO AI, INC operates Puppetry (puppetry.com), an AI video-creation platform that turns any portrait photo into a realistic lip-synced talking-head video. Users upload an image, provide a script or audio, pick from 500+ AI voices across 65+ languages, and Puppetry renders a video in minutes — with voice cloning, AI Stories multi-scene storytelling, caption studio, and cartoon/object animation. Beyond the studio web and iOS apps and a Canva integration, Puppetry ships a Developer API beta (Studio plan) for agents and app integrations: a Puppetry Voice API (list voices + TTS), hosted audio uploads with signed URLs, and credit-backed text-to-video and audio-to-video jobs with idempotent creation and job-and-poll status. It publishes an OpenAPI 3.1 spec, an official TypeScript SDK, an MCP server, llms.txt, and an ai-plugin.json manifest. Founded by ex-Google/Microsoft/Apple/Amazon engineers; backed by 500 Global.
 
-Backed by: 500-global — https://puppetry.com
+**Areas:** Company · Artificial Intelligence · Video · Text-to-Speech · Voice · Generative AI · Avatars · Content Creation · Developer API · MCP
+
+## Puppetry on APIs.io
+
+Everything profiled for Puppetry is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/elbo-ai-inc/](https://apis.io/providers/elbo-ai-inc/)** — or go straight to one of the APIs or properties below.
+
+### APIs (5)
+
+- [ELBO AI, INC Audio Uploads API](https://apis.io/apis/elbo-ai-inc/elbo-ai-inc-audio-uploads-api/) — The Audio Uploads API from ELBO AI, INC — 1 operation(s) for audio uploads.
+- [ELBO AI, INC Text to Speech API](https://apis.io/apis/elbo-ai-inc/elbo-ai-inc-text-to-speech-api/) — The Text to Speech API from ELBO AI, INC — 1 operation(s) for text to speech.
+- [ELBO AI, INC Usage API](https://apis.io/apis/elbo-ai-inc/elbo-ai-inc-usage-api/) — The Usage API from ELBO AI, INC — 1 operation(s) for usage.
+- [ELBO AI, INC Videos API](https://apis.io/apis/elbo-ai-inc/elbo-ai-inc-videos-api/) — The Videos API from ELBO AI, INC — 3 operation(s) for videos.
+- [ELBO AI, INC Voices API](https://apis.io/apis/elbo-ai-inc/elbo-ai-inc-voices-api/) — The Voices API from ELBO AI, INC — 1 operation(s) for voices.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [puppetry](https://apis.io/servers/elbo-ai-inc/puppetry/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Elbo Ai Inc Agentic Access](https://apis.io/agentic-access/elbo-ai-inc/elbo-ai-inc-agentic-access/)
+
+#### Collections (5)
+
+Postman and Open Collection request collections.
+
+- [Puppetry Developer API Beta Audio Uploads API](https://apis.io/collections/elbo-ai-inc/open-elbo-ai-inc-audio-uploads-api/)
+- [Puppetry Developer API Beta Audio Uploads Text to Speech API](https://apis.io/collections/elbo-ai-inc/open-elbo-ai-inc-text-to-speech-api/)
+- [Puppetry Developer API Beta Audio Uploads Usage API](https://apis.io/collections/elbo-ai-inc/open-elbo-ai-inc-usage-api/)
+- [Puppetry Developer API Beta Audio Uploads Videos API](https://apis.io/collections/elbo-ai-inc/open-elbo-ai-inc-videos-api/)
+- [Puppetry Developer API Beta Audio Uploads Voices API](https://apis.io/collections/elbo-ai-inc/open-elbo-ai-inc-voices-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Elbo Ai Inc Puppetry Overlay](https://apis.io/overlays/elbo-ai-inc/elbo-ai-inc-puppetry-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Elbo Ai Inc Authentication](https://apis.io/security/elbo-ai-inc/elbo-ai-inc-authentication/)
+- [Elbo Ai Inc Domain Security](https://apis.io/security/elbo-ai-inc/elbo-ai-inc-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://puppetry.com)
+- [Documentation](https://www.puppetry.com/for-agents)
+- [Getting started](https://www.puppetry.com/developer)
+- [API reference](https://www.puppetry.com/developer)
+- [Pricing](https://www.puppetry.com/pricing)
+- [Sign up](https://www.puppetry.com/sign-up)
+- [Support](https://www.puppetry.com/support)
+- [Changelog](https://www.puppetry.com/changelog)
+- [Blog](https://www.puppetry.com/blog)
+- [Terms of service](https://www.puppetry.com/tos)
+- [Privacy policy](https://www.puppetry.com/privacy)
+
+## API Evangelist rating
+
+**Kin Score 48.1** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 71.7 |
+| Contract quality | 53.6 |
+| Contract governance | 4.5 |
+| Operational transparency | 15.8 |
+| Developer ergonomics | 66.1 |
+| Access clarity | 44.7 |
+
+**Agent readiness 43.6** — agent-native
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | verified |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 22.7** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/elbo-ai-inc/](https://apis.io/providers/elbo-ai-inc/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Puppetry: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/elbo-ai-inc/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
